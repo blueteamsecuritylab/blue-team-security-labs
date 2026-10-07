@@ -1,6 +1,6 @@
 ![Blue Team Security Labs: threat hunts, forensic walkthroughs, and offline analysis tools](assets/repository-banner.svg)
 
-[![Checks](https://github.com/blueteamsecuritylab/blue-team-security-labs/actions/workflows/checks.yml/badge.svg)](https://github.com/blueteamsecuritylab/blue-team-security-labs/actions/workflows/checks.yml)
+[![Checks](https://github.com/blueteamsecuritylab/blue-team-security-labs/actions/workflows/checks.yml/badge.svg?branch=main)](https://github.com/blueteamsecuritylab/blue-team-security-labs/actions/workflows/checks.yml)
 
 [Website](https://blueteamsecurity.org/) · [Hunt queries](hunts/README.md) · [DFIR walkthroughs](docs/zimmerman/README.md) · [Local tools](tools/README.md)
 
