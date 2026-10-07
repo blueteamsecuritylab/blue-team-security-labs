@@ -1,0 +1,6 @@
+EventTime,Artifact,Note
+2026-10-07T08:00:00Z,Synthetic record,UTC example
+2026-10-07T10:30:00+02:00,Synthetic record,Offset example
+2026-10-07 08:45:00,Synthetic record,Naive time interpreted as UTC only for this fixture
+invalid-time,Synthetic record,Intentional invalid timestamp
+,Synthetic record,Intentional missing timestamp

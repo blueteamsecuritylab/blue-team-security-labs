@@ -1,0 +1,44 @@
+{
+  "summary_format_version": 1,
+  "input": {
+    "size_bytes": 329,
+    "sha256": "9fc2eaeaeee36a10991c180575ba0cf82fc1fbc25973362e524f51167a7a308e"
+  },
+  "timestamp_policy": {
+    "column": "EventTime",
+    "delimiter": ",",
+    "naive_timezone": "utc",
+    "output_timezone": "UTC",
+    "format": "ISO 8601 date-time with seconds and up to 6 fractional digits"
+  },
+  "counts": {
+    "data_records": 5,
+    "parsed_timestamps": 3,
+    "blank_records": 0,
+    "row_width_errors": 0,
+    "missing_timestamps": 1,
+    "invalid_timestamps": 1
+  },
+  "observed_time_bounds_utc": {
+    "minimum": "2026-10-07T08:00:00Z",
+    "maximum": "2026-10-07T08:45:00Z"
+  },
+  "warnings": [
+    {
+      "kind": "invalid_timestamp",
+      "start_line": 5,
+      "end_line": 5
+    },
+    {
+      "kind": "missing_timestamp",
+      "start_line": 6,
+      "end_line": 6
+    }
+  ],
+  "warnings_omitted": 0,
+  "scope": "Counts and bounds describe parsed values in this selected CSV snapshot. They do not establish execution, causation, coverage or evidence completeness.",
+  "reported_provenance": {
+    "verification": "unverified_user_labels",
+    "source": "Repository synthetic fixture"
+  }
+}

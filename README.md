@@ -13,6 +13,8 @@ Start with an investigation question, inspect the matching event, and follow the
 | [Device process timeline](hunts/device-process-timeline.md) | Microsoft Defender XDR | What process activity was recorded for one device and time window? |
 | [File hash scope](hunts/file-hash-scope.md) | Microsoft Defender XDR | How widely did the searched file hash appear? |
 | [Static file triage](malware-analysis/README.md) | Python, local files | What bytes and hashes are in the file being reviewed? |
+| [Zimmerman walkthroughs](docs/zimmerman/README.md) | 31 artifact, viewer, and support tools | Which tool fits the artifact, and what can its output establish? |
+| [EZ CSV Summary](docs/tools/ez-csv-summary.md) | Python, parser CSV exports | What counts and UTC time bounds are present in one selected timestamp column? |
 
 Each hunt includes prerequisites, expected matches, false positives, next pivots, and a link to its published article. Copyable queries live in [queries/](queries/). [PROVENANCE.json](PROVENANCE.json) records their source sections and SHA-256 digests.
 
@@ -20,7 +22,9 @@ Each hunt includes prerequisites, expected matches, false positives, next pivots
 
 The query files are excerpts of published educational articles. Their text and referenced fields were reviewed on October 7, 2026. They have **not been executed in a SentinelOne or Defender tenant for this repository**, and no query results or detection-performance claims are supplied. Console operators, event coverage, and populated values still need an authorized environment check.
 
-The local static triage tool has automated tests against benign temporary fixtures. Run them with Python 3.10 or newer:
+Zimmerman walkthroughs were checked against official documentation on October 7, 2026. Their parser and GUI examples have not been run in this session. The guides preserve the distinction between an artifact record, a derived result, and a corroborated finding.
+
+The two original Python utilities have automated tests against benign temporary fixtures. Run them with Python 3.10 or newer:
 
 ```bash
 python -m unittest discover -s tests -v
