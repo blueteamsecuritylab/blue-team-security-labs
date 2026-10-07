@@ -1,40 +1,38 @@
-# RECmd: turn copied Registry hives into reviewable leads
+# RECmd: batch Registry extraction and key inspection
 
-**Question:** Which recorded Registry settings or user artifacts help explain the lab activity?
+RECmd extracts selected Registry artifacts from offline hives and supports direct key queries. Use the [lab setup](../setup.md) with copied hives under `C:\Cases\LAB-001\evidence\registry`. Preserve host and profile directories, matching transaction logs, and the list of collected hives. Machine and user hives cover different settings and activity.
 
-Complete the [shared setup](../setup.md). Place copied lab hives under `C:\Cases\LAB-001\evidence\registry`, preserving the user and host directory structure. Include matching transaction logs when acquired. Record which hives were collected; a user hive and a machine hive answer different questions.
+## Export with DFIRBatch
 
-## Use a named batch definition
-
-RECmd batch export requires a batch file and an output directory. The author repository currently identifies DFIRBatch as the maintained successor to the older Kroll batch. Retain the exact batch file used, its hash, and the tool version.
+Batch CSV export requires both `--bn` and an output directory. The author repository identifies DFIRBatch as the maintained successor to the Kroll batch. Confirm the file exists in the installed package and retain its hash and the tool version.
 
 ```powershell
 & "C:\Tools\EZTools\RECmd\RECmd.exe" -d "C:\Cases\LAB-001\evidence\registry" --bn "C:\Tools\EZTools\RECmd\BatchExamples\DFIRBatch.reb" --csv "C:\Cases\LAB-001\outputs\recmd"
 ```
 
-Check that the named batch exists in your installed package before running. Save the console transcript. Read the batch definitions relevant to your question: they state the hive type, key path, value selection, recursion, and any plugin interpretation. Do not assume the batch exhaustively examines every Registry location.
+Save the console transcript. Read the relevant batch entries: each specifies a hive type, key path, value selection, recursion, and any plugin interpretation. The batch does not examine every Registry location.
 
-For a focused follow-up, use a documented key query against one copied SOFTWARE hive:
+To inspect startup configuration in one copied SOFTWARE hive:
 
 ```powershell
 & "C:\Tools\EZTools\RECmd\RECmd.exe" -f "C:\Cases\LAB-001\evidence\registry\machine\SOFTWARE" --kn "Microsoft\Windows\CurrentVersion\Run"
 ```
 
-This prints key details; it is a separate operation from the batch CSV export.
+This prints key details separately from the batch CSV export.
 
-## Review the value before naming the behavior
+## Interpret values and last-write times
 
-For each lead, retain the source hive, key path, value name, value data, and parsing notes. Associate user hives with their acquired profile path and SID evidence, not just an output filename. Compare an autorun value with the referenced file, account context, and independent execution telemetry. Configuration can exist without successful execution.
+Record the source hive, key path, value name, data, and parsing notes. Attribute user hives through acquired profile paths and SID evidence rather than output filenames.
 
-Key last-write timestamps describe changes to a key; they are not an execution time for every value beneath it. Recovered or deleted records must remain labeled as such.
+For an autorun value, examine the referenced file, account context, and independent execution telemetry. Configured startup behavior does not establish successful execution. A key's last-write timestamp records a key change, not an execution time for each value. Keep recovered or deleted records labeled.
 
-## Limits and troubleshooting
+## Resolve dirty hives and missing output
 
-A dirty-hive warning requires attention to matching transaction logs and replay behavior. Do not silence it by discarding logs. If an older parser needs a derived hive, use the [RLA workflow](rla.md) and keep the derivation separate.
+Review dirty-hive warnings against matching transaction logs and replay behavior; discarding logs can omit recent data. If another parser requires a derived hive, use [RLA](rla.md) and retain the derivation separately.
 
-Missing output can reflect an absent hive, a batch mismatch, missing plugins, or no matching keys. Check the transcript and batch definition before interpreting absence. Inspect a disputed key in [Registry Explorer](registry-explorer.md); both tools share a parsing foundation, so their agreement is useful but not an independent engine validation.
+Missing output may reflect an absent hive, batch mismatch, missing plugin, or no matching keys. Check the transcript and batch definition. Inspect disputed keys in [Registry Explorer](registry-explorer.md). It shares RECmd's parsing foundation, so agreement is not independent engine validation.
 
-**Validation status:** Author documentation and examples checked on 2026-10-07. RECmd was **not run**; no lab results are supplied.
+Author documentation and examples checked 2026-10-07. RECmd not run; no lab results supplied.
 
 ## Sources
 

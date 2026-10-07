@@ -1,33 +1,31 @@
-# ShellBags Explorer: examine one folder-navigation lead
+# ShellBags Explorer: inspect paths and shell items
 
-**Question:** What underlying shell item supports a path reported in an offline user's ShellBags?
+ShellBags Explorer shows the shell items behind a reconstructed folder path. Use the [lab setup](../setup.md) with a copied user hive such as `C:\Cases\LAB-001\evidence\registry\user-lab\UsrClass.dat` and matching transaction logs when acquired. Record profile attribution, hash, acquisition time, and tool version. Keep acquired originals outside output locations.
 
-Complete the [shared setup](../setup.md). Use a copied lab user hive such as `C:\Cases\LAB-001\evidence\registry\user-lab\UsrClass.dat`, together with matching transaction logs when acquired. Record the profile relationship, hash, acquisition time, and tool version. Keep the acquired originals outside output locations.
+## Load an offline hive
 
-## Load the hive and inspect the item
+Menu names below follow the official manual and may vary by release.
 
-The following workflow is documented in the official manual. Check the installed release's labels before following it.
+1. Confirm the display timezone through Tools before loading a source. The documented default is UTC.
+2. Use File to load an offline hive and select the copied UsrClass hive. The live Registry option examines the analysis machine instead.
+3. Review the parsing summary and Messages window; retain errors and informational warnings.
+4. Select a folder branch and its grid row. Record the absolute path, bag path, item type, and source hive.
+5. Inspect Details and Hex for the selected item. Distinguish decoded item fields from the key's last-write timestamp.
+6. Use File → Export → CSV and save under `C:\Cases\LAB-001\outputs\shellbags-explorer`. CSV exports available columns; Excel follows visible-column selections. Record filters and timezone choices.
 
-1. Start ShellBags Explorer. Use the **Tools** menu's timezone option to confirm the display zone before loading a source. The manual documents UTC as the default.
-2. Use the **File** menu to load an **offline hive**, then choose the copied UsrClass hive. Avoid choosing the live Registry when your question concerns an acquired system.
-3. Check the parsing summary and Messages window. Retain errors and informational warnings with the review notes.
-4. Select a folder branch in the tree, then inspect the corresponding grid row. Record its absolute path, bag path, item type, and source hive.
-5. Examine the **Details** and **Hex** views for that selected item. Separate fields decoded from the shell item from the key's last-write timestamp.
-6. Export through **File → Export → CSV** to `C:\Cases\LAB-001\outputs\shellbags-explorer`. The manual documents CSV export of available columns; Excel export follows the visible-column selection. Note any filters and timezone choices alongside the export.
+## Read the item and its hierarchy
 
-## Keep the inference narrow
+A reconstructed path describes folder-navigation artifacts in the profile. It is not an inventory of files the user saw and does not establish execution, copying, or exfiltration.
 
-A reconstructed path is a lead about folder-navigation artifacts in that profile. It is not an inventory of all files the user saw. It also does not establish file execution, copying, or exfiltration.
+First/last explored fields, embedded created/modified/accessed fields, and Registry key last-write times have different meanings. Inspect the selected item and surrounding hierarchy before assigning a time to an action. A changed parent key's timestamp does not apply automatically to every child.
 
-First/last explored values, embedded created/modified/accessed values, and Registry key last-write times have different meanings. Inspect the selected item and surrounding hierarchy before making a time claim. A recent key timestamp can reflect a change to ShellBag state; it should not be assigned indiscriminately to all children.
+## Investigate partial paths and missing branches
 
-## Troubleshooting and next pivots
+Unknown GUIDs and extension-block messages can indicate interpretation limits. Retain the messages and inspect raw bytes when a path is incomplete. Blank timestamps may be expected for the item type.
 
-Unknown GUIDs or extension-block messages can indicate limitations in interpretation. Save those messages and inspect the raw item rather than silently accepting a partial path. Blank timestamp fields may be expected for an item type.
+Missing branches can also reflect the wrong user hive or an incomplete acquisition. Check NTUSER and UsrClass coverage and transaction-log availability. Use [SBECmd](sbecmd.md) for repeatable export across profiles. Correlate paths with LNK/Jump List records, removable-device evidence, and file-system records before reporting file access.
 
-A missing branch can also reflect an incomplete acquisition or the wrong user hive. Check NTUSER and UsrClass coverage and transaction-log availability. For repeatable export across several copied profiles, use [SBECmd](sbecmd.md). Correlate a path with LNK/Jump List records, removable-device evidence, and file-system records before describing a file-access event.
-
-**Validation status:** Official GUI documentation checked on 2026-10-07. ShellBags Explorer was **not opened or tested**; no screenshots or observed findings are supplied.
+Official GUI documentation checked 2026-10-07. GUI not opened or tested; no screenshots or observed findings supplied.
 
 ## Sources
 

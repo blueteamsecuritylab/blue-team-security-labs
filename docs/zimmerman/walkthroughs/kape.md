@@ -1,31 +1,32 @@
-# KAPE: review collection separately from processing
+# KAPE: collect artifacts, then process the collection
 
-**Question:** Which artifacts will be collected, and which programs will process them?
+Which files will the Target definitions collect, and which programs will the Modules run?
 
-KAPE uses **Targets** to collect files and **Modules** to run programs. Those are different operations with different outputs. The graphical `gkape` interface displays the command it will execute, which provides a useful review point before touching a lab source.
+KAPE separates collection through Targets from program execution through Modules. Its `gkape` interface shows the command that will run as options are selected.
 
-## Check licensing and inputs
+## Confirm permitted use and lab scope
 
-The current official FAQ states that, effective January 1, 2026, KAPE is unavailable for commercial use involving third-party networks or paid engagements. It lists government, educational, research, and internal-company use as free. Review the current FAQ and supplied EULA for your intended use; this lab guide is not an MDR client-deployment instruction or a blanket open-source license statement.
+The official FAQ states that commercial use on third-party networks or paid engagements is unavailable from January 1, 2026. Government, educational, research, and internal-company use is listed as free. Check the current FAQ and supplied EULA for the intended use. KAPE is not covered by a blanket open-source permission, and this example does not authorize MDR client deployment.
 
-Follow the [shared setup](../setup.md). Keep acquired lab material under `C:\Cases\LAB-001\evidence`. Identify the authorized source volume explicitly. Place copied artifacts under `C:\Cases\LAB-001\work\kape-collected` and parser outputs under `C:\Cases\LAB-001\output\kape`. KAPE's official getting-started documentation requires administrator rights. Do not run it on a workplace endpoint as part of this exercise.
+Follow the [shared setup](../setup.md). Use an explicitly identified lab source, with acquired material under `C:\Cases\LAB-001\evidence`, collection output under `C:\Cases\LAB-001\work\kape-collected`, and parser output under `C:\Cases\LAB-001\output\kape`. KAPE requires administrator rights. The exercise does not include workplace endpoints.
 
-## Review and execute an authorized lab workflow
+## Review the collection command
 
-1. Open `gkape` from the KAPE directory. Select **Use Target options**. Set the verified lab source and the separate collection destination.
-2. Select only the reviewed Target definitions needed for the question. Inspect their paths and scope; the displayed command updates as selections change.
-3. Use **Copy** to preserve the proposed command in the run notes. Review it before **Execute**. Keep destination-flush options disabled: `--tflush` and `--mflush` delete their respective destination directories.
-4. Review collection logs and copied files before analysis. Record gaps and exclusions.
-5. For a separate processing run, select **Use Module options** with the collection as Module source and the output directory as Module destination. Review each Module command and its required binary before execution. Preserve the resulting parser logs and outputs.
+1. Open `gkape` from the KAPE directory and select **Use Target options**. Set the verified source and collection destination.
+2. Select the required Target definitions and inspect their paths and scope. Check the updated command shown in the interface.
+3. Use **Copy** to save the command before **Execute**. Leave `--tflush` and `--mflush` disabled: each deletes its destination directory.
+4. Review collection logs and copied files, recording gaps and exclusions before analysis.
 
-## Review the boundaries
+## Run reviewed Modules against the collection
 
-Targets collect a configured subset, not a complete disk image. Modules run their configured programs; KAPE does not automatically supply every required binary. Missing programs or skipped files mean the run is incomplete. Updating Target, Module, or parser definitions changes the procedure, so record and preserve their revisions. A successful collection is not a finding of compromise.
+Select **Use Module options**, using the collection as Module source and the separate output directory as destination. Review each Module's command and required binary, then preserve parser logs and outputs.
 
-## Sources and validation
+Targets collect a configured subset, not a complete image. KAPE does not automatically supply every Module binary. Missing programs and skipped files leave an incomplete run. Retain Target, Module, and parser revisions; updates change the procedure. Collection success alone does not indicate compromise.
+
+## References
 
 - [Official getting-started guide](https://github.com/EricZimmerman/KapeDocs/blob/master/Pages/2.-Getting-started.md)
 - [Official gkape guide](https://github.com/EricZimmerman/KapeDocs/blob/master/Pages/5.-gkape.md)
 - [Current licensing FAQ](https://github.com/EricZimmerman/KapeDocs/blob/master/Pages/50-Frequently-asked-questions.md)
 
-Sources checked October 7, 2026. Documentation was reviewed; KAPE was not installed or executed, and no endpoint collection was performed for this repository.
+Sources checked October 7, 2026. Documentation reviewed; KAPE not installed or run. No endpoint collection performed.

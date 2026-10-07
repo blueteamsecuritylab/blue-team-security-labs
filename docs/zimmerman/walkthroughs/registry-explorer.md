@@ -1,32 +1,30 @@
-# Registry Explorer: inspect the key behind a parsed lead
+# Registry Explorer: inspect offline Registry keys
 
-**Question:** What does a copied Registry hive actually contain at the location reported by an automated parser?
+Registry Explorer exposes keys and values behind an automated Registry finding. Use the [lab setup](../setup.md) with a copied hive such as `C:\Cases\LAB-001\evidence\registry\machine\SOFTWARE` and matching transaction logs where available. Preserve acquired originals and record the host, source path, hash, tool version, and display timezone.
 
-Use the [shared setup](../setup.md). Begin with a copied lab hive, such as `C:\Cases\LAB-001\evidence\registry\machine\SOFTWARE`, and its matching transaction logs if available. Preserve the acquired originals. Note the host, source path, hash, tool version, and display timezone before examining data.
+## Load the hive and inspect startup configuration
 
-## Load and inspect an offline hive
+Menu names below follow the official manual and may vary by release.
 
-These steps follow the official manual; labels can vary with the installed release.
+1. Choose File → Load offline hive and select the copied SOFTWARE hive. Dragging an offline hive onto the interface is also documented.
+2. Wait for loading to finish and check the source path and messages. For a dirty hive, record the replay decision. Save any updated hive outside the evidence directory as a derivative.
+3. Navigate to `Microsoft\Windows\CurrentVersion\Run` and inspect value names, types, data, and the key's last-write time.
+4. Use Tools → Find to search a filename or path fragment. Select the relevant search areas. Distinguish active values from recovered records and value-slack hits.
+5. Record the full hive and key paths before exporting. A value's context menu exports its data; a key's context menu exports the values table. Save under `C:\Cases\LAB-001\outputs\registry-explorer` and note visible columns and filters.
 
-1. Start Registry Explorer. Choose **File → Load offline hive**, then select the copied SOFTWARE hive. The documented alternate method is dragging an offline hive onto the interface.
-2. Wait for loading to finish. Check the displayed source path and messages. If the hive is dirty, record the log-replay decision. If saving an updated hive is offered, choose a new derived-output location outside evidence.
-3. Expand the hive tree and navigate to `Microsoft\Windows\CurrentVersion\Run`. Select the key and inspect the value names, types, data, and key last-write time.
-4. For a wider check, open **Tools → Find**. Enter a lab filename or path fragment, choose the relevant search areas, and run the search. Treat results in value slack or recovered records separately from active values.
-5. Record the full hive and key paths before exporting. The manual documents value-data export from a value's context menu and values-table export from a key's context menu. Save under `C:\Cases\LAB-001\outputs\registry-explorer`, noting any visible-column or filter choices.
+## Test an autorun interpretation
 
-## Interpret the setting in context
+A Run value records startup configuration in that hive. It does not establish successful execution, who set it, or whether the target file was malicious. Examine the referenced file's hash and signature, then correlate process telemetry and event logs.
 
-A Run value is evidence of configured startup behavior in that hive. It does not, by itself, show that the program executed successfully, which person set it, or whether its target bytes were malicious. Follow the referenced executable into file hashes, signature information, process telemetry, and event logs.
+Last-write belongs to the key, not each value. A path-fragment search may return unrelated data; inspect the value type and surrounding keys.
 
-The key's last-write time belongs to the key, not to each value individually. A search hit can be an unrelated path fragment; read the value type and surrounding keys before assigning meaning.
+## Account for hidden or missing data
 
-## Troubleshooting and next pivots
+Confirm the intended hive type and user or machine context. Dirty hives without matching logs can omit recent changes. Record search filters, hidden columns, and recovery settings because they affect the displayed data.
 
-Check that you loaded the intended hive type and user or machine context. Dirty hives without matching logs can omit recent changes. Search filters, hidden columns, and recovery settings can alter what is visible; include those settings in the notes.
+Keep exported REG files for examination; importing one changes the analysis machine's Registry. Use [RECmd](recmd.md) for repeatable extraction across copied hives or [RLA](rla.md) when another parser needs replayed data. Identify a replayed hive as derived evidence.
 
-Do not import an exported REG file into your analysis machine. It is a representation for examination, not an installation step. For repeatable processing across copied hives, continue with [RECmd](recmd.md). Where replay is required for another parser, use [RLA](rla.md) and identify the resulting hive as derived evidence.
-
-**Validation status:** Official GUI documentation checked on 2026-10-07. The GUI was **not opened or tested** for this walkthrough; no screenshots or observed findings are supplied.
+Official GUI documentation checked 2026-10-07. GUI not opened or tested; no screenshots or observed findings supplied.
 
 ## Sources
 

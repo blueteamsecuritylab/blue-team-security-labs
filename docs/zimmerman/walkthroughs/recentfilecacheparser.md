@@ -1,16 +1,14 @@
-# RecentFileCacheParser: turn a legacy cache path into a scoped lead
+# RecentFileCacheParser: paths recorded in a legacy cache
 
-**Question:** Which file paths are present in an acquired RecentFileCache, and can another artifact explain those references?
+Extract file paths from an acquired RecentFileCache and find corroborating records for a candidate program.
 
-## Prepare the input
+## Acquire RecentFileCache.bcf
 
-Follow [setup and evidence handling](../setup.md). When the source system contains it, acquire an authorized copy of `C:\Windows\AppCompat\Programs\RecentFileCache.bcf`. Record Windows build, original path, collection time, hash, and acquisition method. Preserve filesystem metadata separately if ordinary copying changes it. Place a working file at `C:\Cases\LAB-001\evidence\appcompat\RecentFileCache.bcf`.
+Follow [setup and evidence handling](../setup.md). When present, acquire `C:\Windows\AppCompat\Programs\RecentFileCache.bcf`. Record the Windows build, original path, collection time, hash, and acquisition method. Preserve original filesystem metadata separately if copying changes it. Place the copy at `C:\Cases\LAB-001\evidence\appcompat\RecentFileCache.bcf`.
 
-This is a legacy artifact workflow. Do not assume a contemporary Windows host must contain this file, or confuse it with Amcache merely because the directories are similar. A missing cache is not a finding that no software ran.
+This legacy artifact is not expected on every contemporary Windows host and is distinct from Amcache despite the similar directory location. A missing cache does not establish that no software ran.
 
-## Parse and export
-
-Use the approved installation in PowerShell:
+## Export the cached paths
 
 ```powershell
 & 'C:\Tools\EZTools\RecentFileCacheParser.exe' --version
@@ -18,26 +16,28 @@ Use the approved installation in PowerShell:
 & 'C:\Tools\EZTools\RecentFileCacheParser.exe' -f 'C:\Cases\LAB-001\evidence\appcompat\RecentFileCache.bcf' --csv 'C:\Cases\LAB-001\output\recent-file-cache'
 ```
 
-The file option identifies the acquired cache and the CSV option selects the output directory. Capture actual version, command, warnings, and output inventory. The author's README and manual document JSON as another option, but CSV is sufficient for the initial path review.
+`-f` selects the acquired cache; `--csv` selects the export directory. Save the installed version, command, warnings, and output inventory. The README and manual also document JSON output; CSV provides the initial path list.
 
-## Inspect the output
+## Keep cache timestamps separate from executable paths
 
-Open the generated CSV and inspect its headers before filtering. Keep the input cache's identity attached to every finding. The manual's JSON example separates source-file timestamps from an array of file names. That structure matters: do not assign the cache's created or modified time as an execution time for each listed executable.
+Inspect the CSV headers and retain the source cache's identity with each finding. The manual's JSON example lists source-file timestamps separately from its file-name array. The cache's creation or modification time cannot be assigned as an execution time to every listed executable.
 
-Choose one complete path, such as fictional `C:\LabApps\SketchHelper.exe`, and write down the exact reference. Compare name, directory, and source-host context rather than treating a familiar filename as a known-good identity. A normal program update or lab maintenance task can explain a new path just as readily as suspicious activity.
+For fictional `C:\LabApps\SketchHelper.exe`, record the full path and compare its directory and source-host context. A familiar filename does not identify a known-good binary. A routine program update or lab maintenance task can explain a new reference.
 
-## Bound the conclusion and pivot
+The cache does not supply a complete installation inventory, reliable per-file launch times, proof of a file's current presence, or a malware verdict.
 
-State that the acquired cache contains a path; do not claim that it supplies a complete installation inventory, a reliable per-file launch time, a current file on disk, or a malware verdict. If the underlying binary was acquired, calculate its hashes and inspect it without execution. Compare [Prefetch](pecmd.md), [Amcache](amcacheparser.md), [ShimCache](appcompatcacheparser.md), and available process telemetry to determine what happened and when.
+## Corroborate a path reference
 
-For empty or failed output, check that the file is the intended cache rather than a renamed unrelated artifact. Review truncation, format support, acquisition completeness, and parser messages. Record missing artifacts and unsuccessful commands. Resolve installation/runtime problems through the shared setup instead of masking them as negative evidence.
+Hash and inspect an acquired candidate binary without executing it. Compare [Prefetch](pecmd.md), [Amcache](amcacheparser.md), [ShimCache](appcompatcacheparser.md), and available process telemetry to investigate the activity and its timing.
 
-## Sources and validation
+For empty or failed output, verify that the input is the intended cache, not a renamed unrelated file. Check truncation, format support, acquisition completeness, and parser messages. Record missing artifacts and unsuccessful commands; use shared setup guidance for installation or runtime errors. Failures do not establish absent activity.
 
-Checked **2026-10-07**:
+## Sources
+
+Checked 2026-10-07:
 
 - [Author's RecentFileCacheParser README](https://github.com/EricZimmerman/RecentFileCacheParser)
 - [Official manual chapter](https://github.com/EZToolsManuals/EZToolsManuals/blob/main/manuscript/recentfilecacheparser.txt)
 - [Author's current catalog](https://ericzimmerman.github.io/)
 
-**Validation status:** Documentation checked; parser/GUI run not performed in this session.
+Validation: Documentation review only; parser and GUI examples have not been run.

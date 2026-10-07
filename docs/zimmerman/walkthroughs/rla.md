@@ -1,36 +1,34 @@
-# RLA: create a documented hive after transaction-log replay
+# RLA: replay Registry logs into a derived hive
 
-**Question:** Can matching Registry transaction logs supply a consistent derived hive for a parser that cannot replay them itself?
+RLA applies Registry transactions and writes a derived hive for parsers that cannot replay logs themselves. Follow the [lab setup](../setup.md), retaining hashed acquisition originals unchanged. Use offline copies and an output directory outside evidence; do not point RLA at the active Windows Registry.
 
-Read the [shared setup](../setup.md). RLA is a preparation step, not an artifact report. It applies Registry transactions and writes a new hive. Keep acquisition originals isolated, hashed, and unchanged. Never put the output directory inside the evidence directory or point the input at an active Windows Registry hive.
+## Supply a matched hive and log set
 
-## Prepare one hive and its logs
+Place `C:\Cases\LAB-001\evidence\registry\user-lab\NTUSER.DAT` with its acquired `NTUSER.DAT.LOG1` and `NTUSER.DAT.LOG2`. Preserve filenames and confirm the files belong to the same acquisition. Logs from another host or snapshot cannot substitute for missing inputs.
 
-Use the copied lab hive `C:\Cases\LAB-001\evidence\registry\user-lab\NTUSER.DAT` with its acquired, matching `NTUSER.DAT.LOG1` and `NTUSER.DAT.LOG2` in the same directory. Preserve those names. Logs from another snapshot or host are not substitutes.
-
-Record the input hashes, acquisition relationship, tool version, and starting hive state. Choose a fresh output directory:
+Record input hashes, acquisition relationships, starting hive state, and tool version. Select a fresh output directory:
 
 ```powershell
 & "C:\Tools\EZTools\RLA\rla.exe" -f "C:\Cases\LAB-001\evidence\registry\user-lab\NTUSER.DAT" --out "C:\Cases\LAB-001\outputs\rla"
 ```
 
-The single-letter input switch is `-f`. The current author source confirms that spelling; some older README examples show `--f`. Save the entire console transcript, including discovered logs, replay messages, warnings, and actual output paths.
+The current author source uses `-f`; older README examples sometimes show `--f`. Retain the transcript, including discovered logs, replay messages, warnings, and actual output paths.
 
-The documented default of `--ca` is true: a clean hive can also be copied to output. Therefore, an output file's existence alone does not prove that transactions were applied. Record what the transcript says happened.
+The documented `--ca` default is true, so even a clean hive can be copied to output. An output file alone does not establish that replay occurred.
 
-## Track the transformation
+## Record what changed
 
-Hash the resulting hive and retain an input-to-output manifest. Record whether logs were applied, which logs were selected, and any missing inputs or errors. Identify the output as a **derived hive after replay**, not the acquired original. The original and derived hashes should remain distinct entries in your notes.
+Hash the result and retain an input-to-output manifest. Record which logs were selected and applied, along with errors or missing inputs. Label the result as a derived hive after replay and retain its hash separately from the original.
 
-Compare the relevant keys before and after replay if that difference matters to the investigation question. Replay makes the available transaction state usable; it does not recover every historical Registry state or establish when a human performed an action.
+Compare relevant keys before and after replay when the difference affects a finding. Replay exposes the available transaction state; it does not recover every historical state or establish when a human performed an action.
 
-## Troubleshooting and next pivots
+## Investigate absent replay
 
-If no logs are applied, investigate whether the hive was already clean, logs were absent, filenames were altered, or the collected set was inconsistent. Do not force a positive result by mixing logs from different acquisitions. A successful copy is not a successful repair claim.
+No applied logs can mean the hive was already clean, logs were absent, filenames changed, or the acquisition set was inconsistent. Do not combine acquisitions to force a result. A copied hive is not proof of successful repair.
 
-The utility may preserve paths or adjust profile-based names; inspect the reported output location rather than inventing a filename. Feed the documented derived hive into [Registry Explorer](registry-explorer.md) or [RECmd](recmd.md), retaining both the replay transcript and parser transcript.
+RLA may preserve paths or adjust profile-based names. Use the reported output location rather than assuming a filename. Pass the documented derivative to [Registry Explorer](registry-explorer.md) or [RECmd](recmd.md), retaining both replay and parser transcripts.
 
-**Validation status:** Manual, author README, and current input-switch source checked on 2026-10-07. RLA was **not executed** and no repaired hive is supplied.
+Manual, author README, and current input-switch source checked 2026-10-07. RLA not executed; no repaired hive supplied.
 
 ## Sources
 

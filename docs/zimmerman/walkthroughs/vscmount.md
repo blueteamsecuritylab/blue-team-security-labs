@@ -1,34 +1,34 @@
-# VSCMount: expose historical lab snapshots for examination
+# VSCMount: map historical snapshots on a lab volume
 
-**Question:** Does an existing volume shadow copy contain an artifact missing from the acquired current state?
+Does an available shadow copy contain an artifact missing from the acquired current state?
 
-VSCMount is a command-line tool that maps available volume shadow copies to symbolic-link paths. It interacts with the analysis host. Use it only within a planned lab acquisition workflow, with the intended source volume explicitly identified; it is not a command to run casually against the workstation's system drive.
+VSCMount maps existing volume shadow copies through symbolic links on the analysis host. Identify the intended lab source before running it; the workstation's system drive is outside this example's scope.
 
-## Prepare the source
+## Verify the source volume
 
-Follow the [shared setup](../setup.md). Keep the acquired lab image under `C:\Cases\LAB-001\evidence\images`. The imaging workflow must already have exposed the authorized lab volume in a form that makes its shadow copies available. In this example, **Q:** is the verified lab volume, not a default or assumed drive letter. Record the image hash, mounting method, write-protection arrangement, and source-volume identity before proceeding.
+Follow the [shared setup](../setup.md). Keep the acquired image under `C:\Cases\LAB-001\evidence\images`. The imaging workflow must expose its shadow copies to the host. Here, `Q:` represents the verified lab volume, not an assumed drive letter. Record image hash, source identity, mounting method, and write-protection arrangement.
 
-## Map and inspect
+## Create mappings and copy artifacts
 
-From the reviewed VSCMount directory in the approved elevated lab environment:
+Run from the VSCMount directory in the approved elevated lab environment:
 
 ```powershell
 .\VSCMount.exe --dl Q --mp 'C:\Cases\LAB-001\work\vsc-links' --ud true
 ```
 
-`--dl` identifies the source drive; `--mp` selects the base mapping directory. `--ud` requests snapshot creation timestamps in the symbolic-link names. Older documentation differs about its default, so specify the intended value and compare installed help before running.
+`--dl` selects the source drive and `--mp` the mapping directory. `--ud` requests snapshot creation timestamps in link names. Older documentation gives differing defaults; specify the value and check installed help.
 
-Inspect the created mappings and record which snapshot supplies each artifact. Copy required files into a separately identified working-evidence location, preserving the snapshot identifier and timestamp in acquisition notes. Process those copies with the relevant parser. Compare historical and current artifacts by source and time, not just by filename.
+Record which snapshot supplies each copied artifact. Keep its identifier and creation time with the working-evidence copy, then process that copy with the appropriate parser. Compare historical and current artifacts by source and time, not filename alone.
 
-## Review and clean up
+## Preserve snapshot provenance during cleanup
 
-Snapshot creation time is the snapshot's time, not the timestamp of every file it contains. Missing snapshots may reflect retention or acquisition limitations; an empty mapping does not prove the file never existed. Repeated snapshots can contain the same bytes, so retain provenance even when deduplicating analysis copies.
+A snapshot's creation time is not every contained file's timestamp. Missing snapshots can reflect retention or acquisition limitations; an empty mapping does not prove a file never existed. Identical bytes in several snapshots still have distinct provenance, even when analysis copies are deduplicated.
 
-When finished, follow the acquisition workflow to remove the created mappings and unmount the lab image. Review the paths first; do not delete the underlying shadow copies or recursively remove a linked evidence tree. This guide supplies no destructive cleanup command. If snapshots are absent, verify the source drive and mounting method rather than switching to the live system volume.
+Remove the mappings and unmount the image through the acquisition workflow. Review paths first: deleting underlying snapshots or recursively removing a linked evidence tree would destroy source material. No destructive cleanup command is included. If snapshots are missing, check the source drive and mounting method rather than switching to the live system volume.
 
-## Sources and validation
+## References
 
 - [Official VSCMount manual](https://github.com/EZToolsManuals/EZToolsManuals/blob/main/manuscript/vscmount.txt)
 - [VSCMount repository and CLI](https://github.com/EricZimmerman/VSCMount)
 
-Sources checked October 7, 2026. The documented switches were reviewed; no mapping, image mount, or parser execution was performed for this repository.
+Sources checked October 7, 2026. Switches reviewed; no mapping, image mount, or parser execution performed.

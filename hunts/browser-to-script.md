@@ -1,30 +1,30 @@
 # Browser to script
 
-**Question:** Did a browser parent appear with a command or script interpreter in the selected endpoint scope?
+Search a selected endpoint window for a browser parent paired with a command or script interpreter.
 
-**Query:** [browser-to-script.s1ql](../queries/sentinelone/browser-to-script.s1ql)
+Query: [browser-to-script.s1ql](../queries/sentinelone/browser-to-script.s1ql)
 
-## Before running
+## Set the scope
 
-Use SentinelOne Deep Visibility with process telemetry and permission to search the relevant endpoint group. Set an alert-sized console time window and record its timezone. Narrow to the relevant endpoint using console scope or an endpoint filter before broadening.
+Use SentinelOne Deep Visibility with process telemetry and access to the endpoint group. Start with the alert window, record the console timezone, and select the relevant endpoint before broadening the search.
 
-The example uses the published `SentinelOne.DeepVisibilityV2` source-parent convention: `src.process.name` identifies the process under review and `src.process.parent.name` identifies its parent. Those fields were checked against the source publication's reference schema. Operators, event population, and returned rows have not been tested here.
+In the published `SentinelOne.DeepVisibilityV2` example, `src.process.name` identifies the process under review and `src.process.parent.name` identifies its parent. These fields were checked against the publication's reference schema; console operators, event population, and returned rows remain untested.
 
-## Read the match
+## Interpret a result
 
-The filter selects rows with a listed browser in the source-parent field and a listed interpreter in the source-process field. It does not constrain event type, so inspect the returned event action and process tree before treating a row as a process launch. A name match alone does not establish a download, successful payload execution, or compromise.
+The filter pairs a listed browser in the source-parent field with a listed interpreter in the source-process field. It has no event-type predicate. Inspect the event action and process tree before describing a launch; a name match does not establish a download, successful payload execution, or compromise.
 
-## Next pivots
+## Follow up
 
 1. Preserve the endpoint, timestamp, event action, process UID, and Storyline ID.
 2. Inspect the full parent and child paths, command lines, signer information, and user context.
 3. Trace related file writes, downloaded content, URLs, and network destinations in the same window.
 4. Compare the chain with approved support, installation, extension, and developer activity.
 
-## Expected benign matches
+## Check legitimate activity
 
-Browser-based support tools, meeting applications, software installers, and developer workflows can launch interpreters. Prefer a specific validated path, signer, script, or workflow for tuning. Do not suppress all browsers or script interpreters.
+Support tools, meeting applications, installers, and developer workflows can launch interpreters from a browser. Tune against a validated path, signer, script, or workflow. Avoid blanket suppression of browsers or interpreters.
 
-**Status:** Published excerpt and field-reference review only. No console execution, synthetic event replay, or result evidence supplied.
+Validation: published excerpt and field-reference review. It has not been run in a console or replayed against synthetic events; no result evidence is included.
 
 **Provenance:** [Query Forge: Browser-to-Script Execution in SentinelOne — Basic Hunt](https://blueteamsecurity.org/blog/query-forge-sentinelone-browser-to-script-execution/).

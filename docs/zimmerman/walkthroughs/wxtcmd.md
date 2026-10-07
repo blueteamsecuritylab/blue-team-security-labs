@@ -1,18 +1,16 @@
-# WxTCmd: inspect recorded Windows Timeline activity
+# WxTCmd: activity records in ActivitiesCache.db
 
-**Question:** What activity records survive in a source user's acquired Timeline database, and what do they contribute to a lab timeline?
+Inspect a source user's acquired Timeline database for application and document activity within the investigation window.
 
-## Prepare the input
+## Preserve the database and SQLite companions
 
-Follow [setup and evidence handling](../setup.md). Acquire an authorized copy of the source profile's `ActivitiesCache.db`, commonly beneath `AppData\Local\ConnectedDevicesPlatform\L.<profile>`. Preserve original directory/profile mapping, Windows build, hashes, acquisition time, and any matching SQLite `-wal` and `-shm` files present. Keep the acquired set intact; committed changes may still reside in a WAL.
+Follow [setup and evidence handling](../setup.md). Acquire the source profile's `ActivitiesCache.db`, commonly beneath `AppData\Local\ConnectedDevicesPlatform\L.<profile>`. Preserve original directory/profile mapping, Windows build, hashes, acquisition time, and matching `-wal` and `-shm` files. Committed changes may still reside in the WAL.
 
-Keep the acquired database and companions unchanged in `C:\Cases\LAB-001\evidence\timeline`. Before each analysis attempt, copy the complete acquired set into a fresh `C:\Cases\LAB-001\working\timeline` directory, preserving filenames and keeping matching companions beside the database. Record each source-to-working path and SHA-256 comparison before parsing. Record the acquisition's consistency and whether the analysis tool incorporated companion files rather than assuming it did.
+Keep this acquired set unchanged in `C:\Cases\LAB-001\evidence\timeline`. For each attempt, copy the complete set into a fresh `C:\Cases\LAB-001\working\timeline` directory, retaining filenames and placing companions beside the database. Record source-to-working paths and SHA-256 comparisons before parsing. Document acquisition consistency and whether the parser incorporated companion files.
 
-Microsoft describes Timeline as a Windows 10 feature; its Windows 11 user experience was retired. Availability and activity-history settings therefore matter. An absent database is a coverage gap.
+Timeline is a Windows 10 feature; its Windows 11 user experience was retired. Availability and activity-history settings affect coverage. A missing database leaves the activity question unresolved.
 
-## Parse and export
-
-Use the verified installation in PowerShell:
+## Parse the working database
 
 ```powershell
 & 'C:\Tools\EZTools\WxTCmd.exe' --version
@@ -20,29 +18,27 @@ Use the verified installation in PowerShell:
 & 'C:\Tools\EZTools\WxTCmd.exe' -f 'C:\Cases\LAB-001\working\timeline\ActivitiesCache.db' --csv 'C:\Cases\LAB-001\output\timeline'
 ```
 
-Save the installed version, command, messages, and output inventory. The file switch targets the working database; CSV selects the results directory. Record working-set hashes after parsing and any changes, because opening a SQLite database can affect its associated state depending on the reader. This example does not claim a read-only tool mode.
+Save the version, command, messages, and export inventory. `-f` targets the working database; `--csv` selects exports. Hash the working set after parsing and record changes: a SQLite reader can affect associated state. No read-only tool mode is assumed.
 
-## Inspect the outputs
+## Interpret activity types and time fields
 
-The official manual describes activity and package-ID CSVs. Inspect actual headers rather than depending on a release-specific filename. Review application identifiers, activity type, start/end fields, and payload context where present. Keep the profile mapping and database source with each selected row.
+Inspect headers in the activity and package-ID CSVs rather than relying on release-specific filenames. Review application identifiers, activity type, start/end fields, and available payload context. Retain source-database and profile mapping with each selected row.
 
-Filter to the lab window and inspect a fictional activity involving `WorkshopPlan.txt`. Resuming a legitimate editing task is a benign explanation. An application's activity record is not automatically equivalent to a process-creation event, a complete execution interval, or proof that a document's contents were read.
+Filter to the lab window. A fictional `WorkshopPlan.txt` activity can reflect resuming an ordinary editing task. An activity record is not automatically a process-creation event, complete execution interval, or proof that document contents were read. Interpret start/end fields according to the record type; they do not establish continuous user presence or identify a human from the profile directory.
 
-Treat start/end values according to the record's semantics. Do not infer user presence continuously between them or identify a human solely from the profile directory.
+## Corroboration and database errors
 
-## Pivot and troubleshoot
+Compare [Jump Lists](jlecmd.md), [shortcuts](lecmd.md), [Prefetch](pecmd.md), and endpoint process telemetry. Identify the independent record supporting each execution or access claim.
 
-Correlate relevant records with [Jump Lists](jlecmd.md), [shortcuts](lecmd.md), [Prefetch](pecmd.md), and endpoint process telemetry. State which independent record supports each execution or access claim.
+For missing rows or database errors, check the source build, collection completeness, companions, supported schema, and warnings. Preserve the acquired database. Any reconstruction belongs on a separately documented derivative, with its method and limitations recorded. Retain failed attempts and use shared setup guidance for startup or runtime problems.
 
-For database errors or absent rows, check source build, collection completeness, SQLite companions, supported schema, and parser warnings. Do not alter the original database to make it open. Any reconstruction belongs on a separately documented derivative copy, with the method and limitations recorded. Preserve unsuccessful attempts and resolve startup/runtime issues through the shared setup.
+## Sources
 
-## Sources and validation
-
-Checked **2026-10-07**:
+Checked 2026-10-07:
 
 - [Author's WxTCmd README](https://github.com/EricZimmerman/WxTCmd)
 - [Official manual chapter](https://github.com/EZToolsManuals/EZToolsManuals/blob/main/manuscript/wxtcmd.txt)
 - [Microsoft Timeline support](https://support.microsoft.com/en-us/windows/ai/ai-features/get-help-with-timeline)
 - [SQLite WAL documentation](https://sqlite.org/wal.html)
 
-**Validation status:** Documentation checked; parser/GUI run not performed in this session.
+Validation: Documentation review only; parser and GUI examples have not been run.

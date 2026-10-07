@@ -1,10 +1,10 @@
 # Offline CSV timestamp summary
 
-[ez_csv_summary.py](../../tools/ez_csv_summary.py) is an original Blue Team Security utility for checking a selected CSV export before a detailed timeline review. It reads one UTF-8 CSV, hashes the exact bytes it parses, counts usable and rejected timestamp records, and reports the observed minimum and maximum in UTC.
+[ez_csv_summary.py](../../tools/ez_csv_summary.py) reads one UTF-8 CSV, hashes the bytes it parses, counts usable and rejected timestamps, and reports the observed bounds in UTC. Use it to check an export before reviewing the timeline in detail.
 
-This is a summary utility, not an artifact parser or acquisition tool. It does not launch Eric Zimmerman tools, execute an artifact, collect endpoint data, contact a network, or infer that a file was executed. CSV values remain data; spreadsheet formulas are never evaluated. Output is JSON only.
+The utility performs no artifact parsing or acquisition, Zimmerman tool launches, artifact execution, endpoint collection, or network access. It evaluates no spreadsheet formulas and writes JSON only. A summary does not establish that a file was executed.
 
-## Try the supplied synthetic fixture
+## Try the sample
 
 From the repository root, run:
 
@@ -12,11 +12,11 @@ From the repository root, run:
 python tools/ez_csv_summary.py examples/ez-csv-summary/synthetic-events.csv --timestamp-column EventTime --naive-tz utc --source "Repository synthetic fixture"
 ```
 
-The [fixture](../../examples/ez-csv-summary/synthetic-events.csv) has five deliberately authored records. The actual [JSON output](../../examples/ez-csv-summary/summary.json) from the October 7, 2026 Windows run contains three parsed timestamps, one invalid timestamp, and one missing timestamp. The observed bounds are 08:00 through 08:45 UTC. These are synthetic utility results, not Zimmerman parser output or an incident finding. The fixture's naive time is deliberately defined as UTC; do not transfer that assumption to a real export.
+The five-record [fixture](../../examples/ez-csv-summary/synthetic-events.csv) produces three parsed timestamps, one invalid timestamp, and one missing timestamp. The [recorded JSON output](../../examples/ez-csv-summary/summary.json) from the October 7, 2026 Windows run spans 08:00–08:45 UTC. This synthetic utility test contains no Zimmerman parser output or incident findings. Its naive time is defined as UTC; establish the timezone independently for a real export.
 
-## Start with the exact export
+## Select the column and timezone
 
-Use Python 3.10 or newer. Select the CSV and inspect its timestamp header and the parser's time handling before choosing a policy. Header matching is exact and case-sensitive; duplicate or blank headers are rejected.
+Use Python 3.10 or newer. Check the CSV's timestamp header and the parser's time handling before selecting a timezone policy. Headers are matched exactly, including case; duplicate and blank headers are rejected.
 
 For timestamps that carry `Z` or a numeric offset:
 
@@ -24,7 +24,7 @@ For timestamps that carry `Z` or a numeric offset:
 python tools/ez_csv_summary.py "C:\Lab\Exports\synthetic-events.csv" --timestamp-column "EventTime"
 ```
 
-If timestamps omit an offset, explicitly state how they should be interpreted. Use `utc` only when you have established that the values are UTC:
+For values without an offset, specify their timezone. Use `utc` only after establishing that the export records UTC:
 
 ```powershell
 python tools/ez_csv_summary.py "C:\Lab\Exports\synthetic-events.csv" --timestamp-column "EventTime" --naive-tz utc --output "C:\Lab\Reports\synthetic-summary.json"
@@ -36,9 +36,9 @@ A fixed offset is also accepted:
 python tools/ez_csv_summary.py "C:\Lab\Exports\synthetic-events.csv" --timestamp-column "EventTime" --naive-tz=-05:00
 ```
 
-A fixed offset has no daylight-saving rules. Do not use one across a DST change without establishing the appropriate interpretation. Offset-bearing values keep their own offset regardless of `--naive-tz`.
+Fixed offsets have no daylight-saving rules. Establish the time interpretation before applying one across a DST change. Values that carry an offset retain it regardless of `--naive-tz`.
 
-The input directory examples above are fictional. The utility does not create output directories.
+The example directories are fictional. Create the output directory before running the command.
 
 ## Format and limits
 
@@ -48,13 +48,15 @@ Supported timestamps contain a date and time with seconds:
 - `2026-10-07 08:00:00.123456+02:00`
 - `2026-10-07 08:00:00`, with an explicit naive-time policy
 
-Numeric offsets require hours from 00 through 23 and minutes from 00 through 59. Invalid offset minutes are rejected rather than normalized. Fractional seconds may contain up to six digits. Values with higher precision, date-only values, locale-specific dates, impossible dates and other formats are counted as invalid. The utility does not truncate precision or guess a date format. Some parser exports use different timestamp formats; check your selected column before using this utility.
+Offsets accept hours 00–23 and minutes 00–59; invalid minutes are rejected. Fractional seconds are limited to six digits. Higher precision, date-only values, locale-specific dates, impossible dates, and unsupported formats count as invalid. No precision is truncated and no format is guessed. Check the selected column because parser exports can use other formats.
 
-UTF-8 with or without a UTF-8 BOM is accepted. Other encodings require an independently documented conversion; preserve the original export separately. Comma is the default delimiter. For an explicitly selected semicolon-delimited file, add `--delimiter ";"`.
+Input must be UTF-8, with an optional UTF-8 BOM. Document any encoding conversion and preserve the original export. The delimiter defaults to comma; use `--delimiter ";"` for a semicolon-delimited file.
 
-The default input limit is 64 MiB. `--max-mib` sets another positive limit. CSV fields are allowed within that snapshot bound, including long unused payload fields; the process's previous CSV field limit is restored after parsing. The utility reads a bounded byte snapshot once, then hashes and parses that same snapshot. It checks file identity, size and modification metadata before and after reading and rejects detected changes. Metadata checks are a practical stability check, not an acquisition guarantee or protection against an adversarial writer that evades them.
+The default byte limit is 64 MiB; `--max-mib` accepts another positive limit. Fields, including unused payloads, may occupy that bound. Parsing sets the CSV field limit to the snapshot bound and restores its prior value afterward.
 
-Final-component input symlinks, nonregular inputs, malformed CSV syntax, duplicate headers and missing selected columns cause failure. A CSV containing only a valid header is allowed and produces zero records and null time bounds.
+The file is read once; the same snapshot is hashed and parsed. Identity, size, and modification metadata checks reject detected changes during reading. These checks do not guarantee acquisition or detect an adversarial writer that evades them.
+
+Input symlinks at the final path component, nonregular files, malformed CSV, duplicate headers, and missing selected columns fail the command. A valid header-only file produces zero records and null bounds.
 
 ## Read the result
 
@@ -75,11 +77,11 @@ The JSON contains:
 | `warnings` | First ten rejected-record notices, with physical start/end line numbers |
 | `warnings_omitted` | Additional notices omitted from the sample |
 
-Each nonparsed record belongs to one of the four rejection categories. A multiline quoted CSV record counts as one record; warning line numbers cover its physical lines. A malformed quoted record fails the whole summary rather than silently skipping it.
+Every nonparsed record enters one of four rejection categories. A multiline quoted record counts once; warnings identify its physical start and end lines. Malformed quoting fails the entire summary.
 
-Counts and time bounds describe only the selected CSV snapshot. They do not establish execution, event ordering across clocks, causation, collection coverage, retention or evidence completeness. A matching hash helps identify a file; it does not authenticate its provenance.
+The counts and bounds apply only to this CSV snapshot. They do not establish execution, order across clocks, causation, coverage, retention, or evidence completeness. A matching hash identifies bytes without authenticating provenance.
 
-## Provenance and privacy
+## Record provenance and review disclosure
 
 Optional labels can record what you report about the export:
 
@@ -87,13 +89,13 @@ Optional labels can record what you report about the export:
 python tools/ez_csv_summary.py "C:\Lab\Exports\synthetic-events.csv" --timestamp-column "EventTime" --naive-tz utc --parser-name "ExampleParser" --parser-version "reported-version" --source "Synthetic lab fixture"
 ```
 
-These labels appear under `reported_provenance` with `verification: unverified_user_labels`. The utility does not verify a binary, a parser version, a command line, a source artifact or a chain of custody. Preserve those records separately.
+Labels appear under `reported_provenance` with `verification: unverified_user_labels`. Preserve binary, parser-version, command-line, source-artifact, and chain-of-custody records separately; the utility verifies none of them.
 
-Full input paths, raw CSV rows, unused columns and timestamp values from rejected records are omitted. The input basename is also omitted unless you supply `--include-filename`. User-provided provenance labels and the selected timestamp header are included literally, so keep sensitive names out of them. Timestamps and counts can themselves reveal activity patterns; review the JSON before sharing it.
+The JSON omits full input paths, raw rows, unused columns, and rejected timestamp values. The basename is included only with `--include-filename`. Provenance labels and the selected header are copied literally; omit sensitive names. Review timestamps and counts for disclosure before sharing the report.
 
 ## Output and exit codes
 
-With no `--output`, JSON is printed to standard output. With `--output`, a completed JSON file is published atomically in the existing destination directory. An existing target is refused unless you explicitly add `--overwrite`. Input/output aliases, output symlinks and output directories are refused. The no-overwrite path requires filesystem hard-link support; if unavailable, writing fails instead of falling back to a partial or unsafe replacement.
+Without `--output`, JSON goes to standard output. With it, the completed report is published atomically in an existing directory. Replacing an existing report requires `--overwrite`; input/output aliases, output symlinks, and directory targets are refused. Without overwrite, publication requires hard-link support. If the filesystem lacks it, the write fails.
 
 | Exit code | Meaning |
 | --- | --- |
@@ -111,6 +113,6 @@ Run the benign fixture suite:
 python -B -m unittest discover -s tests -p test_ez_csv_summary.py -v
 ```
 
-On October 7, 2026, all **23 tests passed** on the connected Windows development machine. Tests cover offset normalization and range validation, explicit naive-time rules, long unused CSV fields, malformed and missing values, row widths and line counts, UTF-8 BOM, headers, format precision, input limits, symlinks, a changed input, output aliases, concurrent target creation, overwrite refusal, privacy defaults and CLI exit codes. Fixtures are generated in temporary directories and contain no real exports.
+On October 7, 2026, **23 tests passed** on Windows. Coverage includes offset normalization and ranges, naive-time rules, long unused fields, malformed and missing values, row widths, physical line counts, BOM, headers, precision, size limits, symlinks, changed input, output aliases, concurrent target creation, overwrite refusal, privacy defaults, and CLI exits. All fixtures are generated in temporary directories using synthetic data.
 
-No Eric Zimmerman parser was run to validate this utility, and no real investigation result is supplied. The tests validate the summary behavior on synthetic CSV inputs.
+The tests validate synthetic CSV summaries. No Eric Zimmerman parser was run, and no real investigation results are included.

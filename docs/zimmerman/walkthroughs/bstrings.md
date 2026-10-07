@@ -1,34 +1,34 @@
-# bstrings: find a lead without running the file
+# bstrings: search file bytes for a lead
 
-**Question:** Does a copied file contain readable text related to the investigation question?
+Does the copied file contain a readable string relevant to the investigation?
 
-bstrings searches files for strings or regular-expression matches. It reads the file as data. Start with a narrow keyword on a benign lab fixture; extracting a string does not validate the behavior described by that string.
+bstrings searches file bytes for literal strings and regular-expression matches without executing the input. A match describes content, not behavior.
 
-## Prepare the input
+## Choose one file and one search term
 
-Follow the [shared setup](../setup.md). Place a benign test file at `C:\Cases\LAB-001\evidence\sample.bin` and record its hash. Decide which term you are looking for and why. Keep results outside the evidence directory. This walkthrough searches for the literal `powershell`; it supplies no executable or malware sample.
+Follow the [shared setup](../setup.md). Place a benign fixture at `C:\Cases\LAB-001\evidence\sample.bin` and record its hash. The example searches for `powershell`; it includes no executable or malware sample. Keep results outside the evidence directory.
 
-## Search and preserve the results
+## Preserve context and offsets
 
-Run from the reviewed tool directory in PowerShell:
+Run in PowerShell from the bstrings directory:
 
 ```powershell
 .\bstrings.exe -f 'C:\Cases\LAB-001\evidence\sample.bin' --ls 'powershell' --off -o 'C:\Cases\LAB-001\output\strings-powershell-run01.txt'
 ```
 
-`-f` chooses one file, `--ls` narrows returned strings, and `--off` includes the documented offset and encoding information. The tool searches ASCII and Unicode strings by default. Save console messages with the command and input hash.
+`-f` selects the file, `--ls` filters returned strings, and `--off` includes offset and encoding information. ASCII and Unicode searches are enabled by default. Save console messages with the command and input hash.
 
-Open the text result as data. Record the full matching context, source file, and reported offset. If the question instead concerns IP-like text, first inspect the installed built-in patterns with `-p`, then use the documented `--lr ipv4` pattern on the same scoped input. Treat that result as text resembling an IPv4 address, not evidence of a connection.
+Read the result as text and record each relevant string's full context, source file, and reported offset. For IP-like strings, inspect built-in patterns with `-p`, then use `--lr ipv4` on the same input. That identifies text resembling an IPv4 address; it does not establish a connection.
 
-## Review the limits
+## Interpret matches and empty results
 
-Strings can come from resources, unused code, documentation, or embedded data. A match for `powershell` does not prove PowerShell ran. A negative result does not rule out compressed, encrypted, encoded, or dynamically constructed content. Correlate leads with a format-aware parser or execution telemetry when available.
+Strings can occur in resources, unused code, documentation, or embedded data. `powershell` in a file does not prove PowerShell ran. Empty results do not exclude compressed, encrypted, encoded, or dynamically constructed content. Use a format-aware parser or execution telemetry to investigate the lead.
 
-The manual states that searches append when the same `-o` filename is reused. Use a new output name for each run so earlier and later scopes do not blend. If results are empty, check file access, encoding settings, minimum string length, and the chosen term before widening scope. For large files, review the documented chunk-size option and available memory; do not silently skip files and report complete coverage.
+Reusing an `-o` filename appends results, so give each run a separate name. For empty output, check access, encoding, minimum string length, and the search term before expanding scope. For large inputs, review chunk size and available memory. Record skipped files; they limit coverage.
 
-## Sources and validation
+## References
 
 - [Official bstrings manual](https://github.com/EZToolsManuals/EZToolsManuals/blob/main/manuscript/bstrings.txt)
 - [bstrings repository](https://github.com/EricZimmerman/bstrings)
 
-Sources checked October 7, 2026. Command syntax was reviewed against documentation; bstrings was not executed for this repository. No search hits are claimed.
+Sources checked October 7, 2026. Command syntax reviewed; bstrings not run. No search hits claimed.

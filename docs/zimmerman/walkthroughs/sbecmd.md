@@ -1,36 +1,34 @@
-# SBECmd: inspect folder-navigation artifacts at scale
+# SBECmd: export offline ShellBags
 
-**Question:** Which folder paths are represented in the acquired lab user's ShellBags, and what follow-up evidence would test their meaning?
+SBECmd extracts folder-navigation artifacts from user Registry hives. Follow the [lab setup](../setup.md) with copied `NTUSER.DAT` and `UsrClass.dat` under `C:\Cases\LAB-001\evidence\registry\user-lab`. Retain profile paths, matching transaction logs, hashes, and acquisition time. Collecting only one hive can omit ShellBags present in the other.
 
-Start with the [shared setup](../setup.md). Use copied `NTUSER.DAT` and `UsrClass.dat` hives under `C:\Cases\LAB-001\evidence\registry\user-lab`. Preserve their profile paths, matching transaction logs, hashes, and acquisition time. Collecting just one hive can leave a different set of ShellBags than collecting both.
+## Parse the copied user hives
 
-## Parse the offline directory
-
-The documented directory option examines offline hives. This example does not use the live-Registry option:
+The directory option processes offline hives:
 
 ```powershell
 & "C:\Tools\EZTools\SBECmd\SBECmd.exe" -d "C:\Cases\LAB-001\evidence\registry\user-lab" --csv "C:\Cases\LAB-001\outputs\sbecmd"
 ```
 
-Adjust the executable path if SBECmd is packaged beside ShellBags Explorer. Save the console transcript, installed version, and generated file list. Inspect warnings concerning dirty hives or incomplete parsing. The manual describes `--nl` as ignoring transaction logs; this example leaves that override unset.
+Adjust the executable path if SBECmd is packaged beside ShellBags Explorer. Save the tool version, transcript, and generated file list. Check dirty-hive and incomplete-parsing warnings. `--nl` ignores transaction logs; the command leaves that override unset.
 
-Keep separate source attribution for each hive. Output filenames are a convenience, not sufficient proof of the account or host to which a row belongs.
+Maintain source attribution for each hive. An output filename alone does not identify the account or host represented by a row.
 
-## Read paths and times together
+## Separate navigation from file activity
 
-Begin with the reconstructed path, source hive, bag path, and shell-item type. Check first/last interaction fields when available, then inspect key last-write times and embedded file-system timestamps separately. They come from different structures and should not be collapsed into one generic “access time.”
+Review reconstructed paths, source hives, bag paths, and shell-item types. First/last interaction fields, key last-write times, and embedded file-system timestamps describe different structures. Keep their meanings separate rather than labeling all of them “access time.”
 
-A represented folder path can support a lead about folder navigation. It does not establish that every file in the folder was opened or copied, that an executable ran, or that the account holder personally performed the action. First and last interaction fields do not enumerate every visit between them.
+A ShellBag path can support folder-navigation analysis. It does not establish that every contained file was opened or copied, that a program executed, or that the account holder performed the action. First and last interaction fields do not list visits between those endpoints.
 
-Preserve unusual paths, remote locations, and removable-volume references in the notes. Correlate them with the relevant acquired profile and independent activity within the same time window.
+Retain unusual paths, remote locations, and removable-volume references. Correlate them with the acquired profile and independent activity in the same time window.
 
-## Troubleshooting and next pivots
+## Review gaps and disputed records
 
-An empty CSV can reflect missing hives, no relevant ShellBags, parsing errors, or collection gaps. Check the transcript before concluding that the user never visited a folder. Some rows legitimately lack particular timestamps or identifiers.
+Empty output can reflect missing hives, absent ShellBags, parsing errors, or collection gaps; it does not prove the user never visited a folder. Some item types lack particular timestamps or identifiers.
 
-Review a disputed record in [ShellBags Explorer](shellbags-explorer.md), using its details and hex views to inspect the shell item. Agreement between these tools is not independent parser validation because they share a parsing foundation. Pivot to LNK files, Jump Lists, event logs, and file-system records to test file access or volume context.
+Use [ShellBags Explorer](shellbags-explorer.md) to inspect a disputed item's details and bytes. The tools share a parsing foundation, so agreement is not independent parser validation. Correlate LNK files, Jump Lists, event logs, and file-system records to investigate file access or volume context.
 
-**Validation status:** Official manual and author usage example checked on 2026-10-07. SBECmd was **not run**; no output rows or account activity are claimed.
+Official manual and author usage example checked 2026-10-07. SBECmd not run; no output rows or account activity supplied.
 
 ## Sources
 

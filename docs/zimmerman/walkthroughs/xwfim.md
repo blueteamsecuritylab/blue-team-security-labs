@@ -1,33 +1,33 @@
 # XWFIM: prepare and verify a licensed X-Ways installation
 
-**Question:** Which X-Ways installation and supporting files will the lab use?
+Which X-Ways version and supporting files will the analysis workstation use?
 
-XWFIM manages local X-Ways Forensics or X-Ways Investigator installations. It downloads and changes application files; it is not an evidence parser. Use it during controlled workstation preparation, with valid X-Ways download credentials and the appropriate license.
+XWFIM downloads and manages X-Ways Forensics or X-Ways Investigator installations. It changes application files rather than parsing evidence. Use valid download credentials and the appropriate X-Ways license.
 
-## Separate software from evidence
+## Separate the installation from case data
 
-Follow the [shared setup](../setup.md). Keep acquired material under `C:\Cases\LAB-001\evidence`, outside the installation destination. Choose a reviewed software path such as `C:\Tools\XWays-Lab`. The current author catalog lists XWFIM in the .NET 4 column; check the selected build's actual runtime requirements.
+Follow the [shared setup](../setup.md). Keep acquired material under `C:\Cases\LAB-001\evidence` and use a dedicated software destination such as `C:\Tools\XWays-Lab`. The catalog lists XWFIM under .NET 4; verify the selected build's runtime requirements.
 
-Credentials, license material, and installation settings can be sensitive. Enter credentials only into the authorized application, and keep them out of public repository files, screenshots, and logs shared with others. Do not use someone else's entitlement or assume the manager provides an X-Ways license.
+Credentials, license material, and settings belong outside public files, screenshots, and shared logs. Enter credentials in the authorized application using the correct entitlement; XWFIM does not provide an X-Ways license.
 
-## Prepare and verify
+## Install and verify the selected version
 
-1. Open XWFIM and supply valid download credentials through its credential interface.
-2. Select the intended X-Ways version in the version dropdown. Record why that version is being prepared.
-3. Confirm the installation directory and X-Ways folder name before selecting **Install**. Use a dedicated destination, not an existing case directory. Review download and installation messages.
-4. Use **Tools → Verify installation**. Select the installed directory, choose whether to generate a log, and select **Verify**. The manual describes an XLSX verification log when logging is enabled; preserve it after checking for sensitive content.
-5. Record the installed version and supporting components before opening evidence in X-Ways. Configuration review remains necessary; a completed install is not validation of an analysis method.
+1. Supply valid credentials through XWFIM's credential interface.
+2. Choose the X-Ways version from the dropdown and record the selection.
+3. Confirm installation directory and folder name before **Install**. Review download and installation messages; the destination must be separate from case data.
+4. Open **Tools → Verify installation**, select the installed directory, choose whether to generate a log, and select **Verify**. Check the XLSX log for sensitive content before retaining or sharing it.
+5. Record version and supporting components, then review configuration before opening evidence. Installation completion does not validate an analysis method.
 
-## Portable installation and troubleshooting
+## Create a portable copy only after first launch
 
-The documented **Tools → Create portable installation** workflow requires that X-Ways has already been launched successfully to create `WinHex.cfg`. Only create a portable copy on a reviewed destination drive under your license terms. Confirm the destination before selecting **Create**, and keep unrelated or private files off that drive.
+**Tools → Create portable installation** requires a successful X-Ways launch to create `WinHex.cfg`. Use a reviewed destination drive under the applicable license, confirm it before **Create**, and exclude unrelated or private files.
 
-If `WinHex.cfg` is missing, check the intended installation and first-launch requirement rather than copying configuration from a different investigator. If verification reports differences, preserve the log and examine them before replacing files. XWFIM's verification concerns software installation integrity; it does not verify case evidence, tool accuracy, or license compliance by itself.
+For a missing `WinHex.cfg`, check the intended installation and first launch rather than borrowing another investigator's configuration. Preserve reported verification differences and examine them before replacing files. Installation verification does not establish evidence integrity, tool accuracy, or license compliance.
 
-## Sources and validation
+## References
 
 - [Official XWFIM manual](https://github.com/EZToolsManuals/EZToolsManuals/blob/main/manuscript/xwfim.txt)
 - [Author catalog](https://ericzimmerman.github.io/)
 - [X-Ways](https://www.x-ways.net/)
 
-Sources checked October 7, 2026. The documented workflow was reviewed; no credentials were entered, software installed, portable copy created, or GUI execution performed for this repository.
+Sources checked October 7, 2026. Documentation reviewed; no credentials entered, software installed, portable copy created, or GUI run.

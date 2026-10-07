@@ -1,16 +1,14 @@
-# AmcacheParser: separate an application lead from an execution claim
+# AmcacheParser: file references and program associations
 
-**Question:** Does the acquired Amcache contain a reference to the fictional lab program being reviewed, and is that reference associated with an installed application?
+Use Amcache to locate a lab program's recorded path and determine whether the file entry is associated with an installed application.
 
-## Prepare the input
+## Acquire the hive and transaction logs
 
-Follow [setup and evidence handling](../setup.md). Obtain an authorized acquisition copy of `C:\Windows\appcompat\Programs\Amcache.hve`, preserving its original location, collection time, hash, and any accompanying transaction logs. Put the working hive and its matching logs together under `C:\Cases\LAB-001\evidence\amcache`. Record the source Windows build. Do not substitute the analyst workstation's hive.
+Use [setup and evidence handling](../setup.md) before acquisition. Preserve the source host's `C:\Windows\appcompat\Programs\Amcache.hve`, original path, collection time, hash, Windows build, and matching transaction logs. Keep the hive and logs together under `C:\Cases\LAB-001\evidence\amcache`. The input must come from the source host, not the analysis workstation.
 
-Use an approved tool installation outside the case directory. The catalog and repository README carry different version banners; save the installed version and help before choosing options.
+Install the approved tool outside the case directory. The catalog and README show different version banners; record the installed version and help output.
 
-## Parse the working copy
-
-Run in PowerShell:
+## Export associated and unassociated entries
 
 ```powershell
 & 'C:\Tools\EZTools\AmcacheParser.exe' --version
@@ -18,26 +16,26 @@ Run in PowerShell:
 & 'C:\Tools\EZTools\AmcacheParser.exe' -f 'C:\Cases\LAB-001\evidence\amcache\Amcache.hve' -i --csv 'C:\Cases\LAB-001\output\amcache'
 ```
 
-The example includes associated program/file entries with `-i` rather than reducing the first pass to unassociated entries. Leave hash inclusion/exclusion filters off during this baseline review. Save console messages with the case notes; a dirty-hive or replay warning changes the coverage you can claim.
+`-i` includes associated program/file entries alongside unassociated entries. Leave hash inclusion and exclusion filters off for the initial export. Save console messages: dirty-hive and log-replay warnings affect the recovered coverage.
 
-## Inspect the outputs
+## Read paths, associations, and hashes
 
-Review the generated CSV files rather than assuming a fixed filename or column layout. Locate program entries, associated files, and unassociated files when present. For a candidate, retain its full path, relevant timestamp names, application association, and recorded hash. State explicitly whether a value came from the artifact or was calculated from a recovered file.
+Inspect the generated CSV headers and locate program entries, associated files, and unassociated files where present. Retain each candidate's full path, named timestamp fields, program association, and recorded hash. Distinguish hashes recorded in Amcache from those calculated from an acquired binary.
 
-An unassociated entry for fictional `SketchHelper.exe` is a triage lead. A portable legitimate drawing utility can also lack an installer association. Neither its name nor that category decides whether it is malware. Amcache formats differ across Windows versions; do not turn every timestamp into a launch time or assume a recorded SHA-1 is interchangeable with a whole-file hash.
+In a fictional drawing lab, `SketchHelper.exe` might be a portable utility with no installer association. An unassociated entry is a lead, not a malware classification. Amcache's format varies by Windows version; a timestamp is not automatically a launch time, and its recorded SHA-1 may not be interchangeable with a whole-file hash.
 
-## Bound the conclusion and pivot
+## Corroborate execution
 
-Write: “The acquired hive references this path,” followed by the exact supporting row. Confirm execution separately using [Prefetch](pecmd.md), process telemetry, or other available records. If the binary was acquired, calculate its hashes and inspect it without launching it. Document missing artifacts.
+Report the path reference with its supporting row. Use [Prefetch](pecmd.md), process telemetry, or other records to establish execution. Hash and inspect an acquired binary without launching it, and record missing artifacts.
 
-For absent rows, verify input identity, Windows build, output files, and warnings before interpreting absence. Preserve a failed parse and troubleshoot the runtime through the shared setup. Do not silence transaction-log warnings merely to obtain a clean-looking report.
+For absent rows, check the input's identity, Windows build, output inventory, and parser warnings. Retain failed commands and use the shared setup to resolve runtime errors. Silencing transaction-log warnings does not restore missing data.
 
-## Sources and validation
+## Sources
 
-Checked **2026-10-07**:
+Checked 2026-10-07:
 
 - [Author's AmcacheParser README](https://github.com/EricZimmerman/AmcacheParser)
 - [Official manual chapter](https://github.com/EZToolsManuals/EZToolsManuals/blob/main/manuscript/amcacheparser.txt)
 - [Author's current tool catalog](https://ericzimmerman.github.io/)
 
-**Validation status:** Documentation checked; parser/GUI run not performed in this session.
+Validation: Documentation review only; parser and GUI examples have not been run.

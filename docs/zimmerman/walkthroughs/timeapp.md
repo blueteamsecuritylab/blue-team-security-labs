@@ -1,33 +1,33 @@
-# TimeApp: document the clock during a lab exercise
+# TimeApp: record workstation time during an exercise
 
-**Question:** What time did the analysis workstation display during the recorded lab actions?
+What clock value was displayed when the lab actions occurred?
 
-TimeApp shows time and includes stopwatch and countdown functions. The author catalog also describes optional public-IP display. Use it as a visible clock in a benign lab recording, then compare the resulting artifacts with the recorded actions. It does not independently certify that the system clock is accurate.
+TimeApp provides local/UTC time, stopwatch, and countdown functions, with optional public-IP display. It supplies visible timing context for a recording, not independent proof that the workstation clock is accurate.
 
-## Prepare the exercise
+## Record the clock state
 
-Follow the [shared setup](../setup.md). Keep the benign exercise inputs under `C:\Cases\LAB-001\evidence` and the recording or notes under `C:\Cases\LAB-001\output\time-lab`. Record the analysis host's timezone and clock-synchronization state using your normal workstation checks. Do not change the clock to make a timeline fit.
+Follow the [shared setup](../setup.md). Keep benign inputs under `C:\Cases\LAB-001\evidence` and recordings or notes under `C:\Cases\LAB-001\output\time-lab`. Record timezone and clock-synchronization state; leave the clock unchanged when comparing artifacts.
 
-The current catalog lists TimeApp in the .NET 4 column. Verify the selected build's actual requirements. Keep public-IP display disabled unless it is necessary for an explicitly scoped network test; displaying it can require an external lookup and can expose the lab's address in a recording.
+The catalog lists TimeApp under .NET 4. Check the selected build's requirements. Leave public-IP display disabled for local work: it can make an external lookup and expose the address in the recording. Enable it only for a scoped network test that needs it.
 
-## Record a small sequence
+## Record an action sequence
 
-1. Open TimeApp and arrange its time display beside the benign lab application. Record whether the displayed value is local time or UTC.
-2. Start a screen recording or a contemporaneous activity note. Keep unrelated windows and private data out of frame.
-3. Perform a short, documented action sequence on benign files: for example, create a training note, rename it, and save it. Write down the action order and the displayed times.
-4. If measuring elapsed time, use the documented stopwatch or countdown function and record which one was used. Do not interpret elapsed duration as an artifact timestamp.
-5. Finish the recording, preserve its hash, and compare separately acquired file metadata or logs with the recorded sequence. Note differences without adjusting the source artifacts.
+1. Place TimeApp beside the benign lab application. Note whether its displayed time is local or UTC.
+2. Start a screen recording or contemporaneous activity note, excluding unrelated windows and private data.
+3. Create, rename, and save a benign training note. Record action order and the visible times.
+4. If measuring elapsed time, note whether the stopwatch or countdown was used. Duration is not an artifact timestamp.
+5. Preserve the recording's hash and compare separately acquired metadata or logs with the sequence. Record discrepancies without adjusting source artifacts.
 
-## Interpret and troubleshoot
+## Compare clocks and timestamp meanings
 
-The recording can show the clock value visible during an action. It does not prove a remote server or acquired device used the same clock, and display precision does not equal clock accuracy. Timezone offsets, delayed writes, and artifact-specific timestamp semantics can explain differences.
+The recording establishes the visible clock value during an action, not that a remote server or acquired device shared that clock. Display precision is not clock accuracy. Timezone offsets, delayed writes, and different artifact timestamp semantics can explain discrepancies.
 
-If a comparison appears inconsistent, check timezone, clock synchronization, recording continuity, and the meaning of each artifact's timestamp first. Preserve the discrepancy in the notes. Public-IP information is generally unnecessary for this local exercise and does not establish device or user identity.
+Check timezone, synchronization, recording continuity, and the meaning of each timestamp before interpreting a mismatch. Retain the discrepancy in the notes. Public-IP display adds no timing assurance and does not establish device or user identity.
 
-## Sources and validation
+## References
 
 - [Current author catalog](https://ericzimmerman.github.io/)
 - [Official TimeApp manual](https://github.com/EZToolsManuals/EZToolsManuals/blob/main/manuscript/timeapp.txt)
 - [TimeApp repository](https://github.com/EricZimmerman/timeapp)
 
-Sources checked October 7, 2026. Documented capabilities were reviewed; the GUI and proposed exercise were not executed for this repository. No time measurements are claimed.
+Sources checked October 7, 2026. Documentation reviewed; GUI and proposed exercise not run. No time measurements claimed.

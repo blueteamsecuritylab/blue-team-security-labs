@@ -1,39 +1,64 @@
-# Blue Team Security Labs
+![Blue Team Security Labs: threat hunts, forensic walkthroughs, and offline analysis tools](assets/repository-banner.svg)
 
-Defensive hunting queries, investigation notes, and small analysis tools from [Blue Team Security](https://blueteamsecurity.org/).
+[![Checks](https://github.com/blueteamsecuritylab/blue-team-security-labs/actions/workflows/checks.yml/badge.svg)](https://github.com/blueteamsecuritylab/blue-team-security-labs/actions/workflows/checks.yml)
 
-Start with an investigation question, inspect the matching event, and follow the evidence. A query match is a lead; the surrounding process, file, identity, and network activity determines what it means.
+[Website](https://blueteamsecurity.org/) · [Hunt queries](hunts/README.md) · [DFIR walkthroughs](docs/zimmerman/README.md) · [Local tools](tools/README.md)
 
-## Explore
+SentinelOne and Microsoft Defender hunts, Windows artifact walkthroughs, and Python utilities for local analysis. This is the code and lab companion to [Blue Team Security](https://blueteamsecurity.org/).
 
-| Example | Platform | Question |
+## Start here
+
+| Task | Open | What you'll find |
 | --- | --- | --- |
-| [Browser to script](hunts/browser-to-script.md) | SentinelOne Deep Visibility | Did a browser parent appear with a script interpreter? |
-| [Encoded PowerShell](hunts/encoded-powershell.md) | SentinelOne Deep Visibility | Which PowerShell command lines include encoded-command fragments? |
-| [Device process timeline](hunts/device-process-timeline.md) | Microsoft Defender XDR | What process activity was recorded for one device and time window? |
-| [File hash scope](hunts/file-hash-scope.md) | Microsoft Defender XDR | How widely did the searched file hash appear? |
-| [Static file triage](malware-analysis/README.md) | Python, local files | What bytes and hashes are in the file being reviewed? |
-| [Zimmerman walkthroughs](docs/zimmerman/README.md) | 31 artifact, viewer, and support tools | Which tool fits the artifact, and what can its output establish? |
-| [EZ CSV Summary](docs/tools/ez-csv-summary.md) | Python, parser CSV exports | What counts and UTC time bounds are present in one selected timestamp column? |
+| Investigate endpoint activity | [Hunt queries](hunts/README.md) | Four queries with prerequisites, expected matches, false positives, and investigation pivots |
+| Examine Windows artifacts | [Zimmerman walkthroughs](docs/zimmerman/README.md) | 31 tool guides, grouped by artifact, with commands or GUI steps and interpretation notes |
+| Inspect a file or CSV export | [Local analysis tools](tools/README.md) | File hashes and byte observations; CSV timestamp counts and UTC bounds |
+| Record an investigation | [Templates](templates/README.md) | Hunt and parser records for scope, commands, inputs, and findings |
 
-Each hunt includes prerequisites, expected matches, false positives, next pivots, and a link to its published article. Copyable queries live in [queries/](queries/). [PROVENANCE.json](PROVENANCE.json) records their source sections and SHA-256 digests.
+## Try the CSV tool
 
-## Validation status
+Python 3.10 or newer. Both utilities use the standard library; no package installation is needed.
 
-The query files are excerpts of published educational articles. Their text and referenced fields were reviewed on October 7, 2026. They have **not been executed in a SentinelOne or Defender tenant for this repository**, and no query results or detection-performance claims are supplied. Console operators, event coverage, and populated values still need an authorized environment check.
+```bash
+git clone https://github.com/blueteamsecuritylab/blue-team-security-labs.git
+cd blue-team-security-labs
+python tools/ez_csv_summary.py examples/ez-csv-summary/synthetic-events.csv --timestamp-column EventTime --naive-tz utc --source "Repository synthetic fixture"
+```
 
-Zimmerman walkthroughs were checked against official documentation on October 7, 2026. Their parser and GUI examples have not been run in this session. The guides preserve the distinction between an artifact record, a derived result, and a corroborated finding.
+The example prints JSON for five synthetic records: three valid timestamps, one invalid value, and one missing value. Its time bounds are 08:00–08:45 UTC. The UTC rule is defined for this fixture; choose the correct rule for your own export.
 
-The two original Python utilities have automated tests against benign temporary fixtures. Run them with Python 3.10 or newer:
+[Example and expected output](examples/ez-csv-summary/README.md) · [CSV tool reference](docs/tools/ez-csv-summary.md) · [Static file triage](malware-analysis/README.md)
+
+## Hunts
+
+| Hunt | Platform | Investigation |
+| --- | --- | --- |
+| [Browser to script](hunts/browser-to-script.md) | SentinelOne | Review browser parents associated with script interpreters |
+| [Encoded PowerShell](hunts/encoded-powershell.md) | SentinelOne | Inspect encoded-command fragments and their process context |
+| [Device process timeline](hunts/device-process-timeline.md) | Defender XDR | Reconstruct process activity for a device and time window |
+| [File hash scope](hunts/file-hash-scope.md) | Defender XDR | Find file events containing a selected SHA-256 |
+
+Copyable files are in [queries](queries/README.md). Each hunt links to its published article and explains the next evidence to collect.
+
+## Review and checks
+
+| Content | Coverage |
+| --- | --- |
+| Hunt queries | Article and field-reference review; tenant execution remains unverified |
+| Zimmerman walkthroughs | Official documentation reviewed October 7, 2026; parser and GUI steps have not been run for these guides |
+| Python utilities | 32 unit tests using benign fixtures; current results appear in [Checks](https://github.com/blueteamsecuritylab/blue-team-security-labs/actions/workflows/checks.yml) |
+
+Run the same checks locally:
 
 ```bash
 python -m unittest discover -s tests -v
+python scripts/check_repository.py
 ```
 
-## Use and contribute
+[Query provenance](PROVENANCE.json) records the four excerpts' article sections and SHA-256 hashes. The [Zimmerman catalog](docs/zimmerman/catalog.json) records upstream manuals, versions, and source commits.
 
-Choose a small endpoint and time scope before running a hunt. Save the exact query and scope, inspect raw rows, and note missing evidence in the [hunt record](templates/hunt-record.md). The examples contain no response automation.
+## Contribute
 
-This repository contains no malware samples, workplace telemetry, incident exports, or deployment credentials. Keep contributions generic or use clearly labeled synthetic data; publish only material you have permission to share.
+For a correction, include the affected file, tool or platform version, and the evidence supporting the change. See [contribution notes](CONTRIBUTING.md). Use synthetic fixtures for examples and keep workplace data, credentials, and malware binaries out of public issues and pull requests.
 
-[Blog](https://blueteamsecurity.org/) · [LinkedIn](https://www.linkedin.com/in/stephentafe/)
+[Blue Team Security](https://blueteamsecurity.org/) · [Stephen Tafe](https://www.linkedin.com/in/stephentafe/)

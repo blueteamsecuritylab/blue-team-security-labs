@@ -1,30 +1,30 @@
 # MFT Explorer: inspect an NTFS record visually
 
-**Question:** What is inside an MFT record, and how does it relate to the CSV view?
+How does a displayed MFT record relate to the parser's CSV row?
 
-MFT Explorer is a graphical viewer for `$MFT` files. The official manual limits its intended use to smaller MFTs and education. For routine parsing or large collections, use [MFTECmd](mftecmd.md), then review the exported CSV. This guide uses a small, deliberately prepared lab artifact to learn the structure.
+MFT Explorer is intended for small MFTs and education. Use [MFTECmd](mftecmd.md) for routine parsing and large collections. A small training volume makes record structure easier to inspect without forcing a workstation-wide MFT into the GUI.
 
-## Prepare the input
+## Load a small training MFT
 
-Follow the [shared setup](../setup.md). Keep a working copy at `C:\Cases\LAB-001\evidence\NTFS\$MFT`, with its acquisition notes and hash. Choose a small training volume rather than a workstation-wide artifact. Record the MFT Explorer build and runtime used; the current catalog offers its GUI build in the .NET 9 column.
+Follow the [shared setup](../setup.md). Keep the copied artifact at `C:\Cases\LAB-001\evidence\NTFS\$MFT`, with its acquisition notes and hash. Record the viewer build and runtime; the current catalog lists its GUI build under .NET 9.
 
-## Explore the record
+## Compare a record with its CSV row
 
-1. Start MFT Explorer on the analysis workstation and load the copied `$MFT` using its file-opening control. Keep the evidence path in your notes.
-2. Inspect the populated record list before searching. Identify which values are record references, filenames, or timestamps so a text match is not mistaken for a different field.
-3. Right-click a column header and select **Show Find Panel**, as documented in the manual. Search for a filename created in the training exercise.
-4. Select the relevant record and examine its displayed details. Note the record identifier, associated paths, and timestamp values rather than copying only the filename.
-5. Parse the same copy with MFTECmd and compare the relevant CSV row. Save your interpretation in the case notes, including both tool versions and the input hash.
+1. Load the copied `$MFT` using the file-opening control and record its path.
+2. Inspect the record list before searching. Distinguish record references, filenames, and timestamps; a text match can occur in any displayed field.
+3. Right-click a column header and select **Show Find Panel**. Search for a filename from the training exercise.
+4. Select the record and note its identifier, associated paths, and timestamp values.
+5. Parse the same copy with MFTECmd and compare the relevant CSV row. Record the input hash, both tool versions, and the comparison in the case notes.
 
-## Review the evidence
+## Account for reused and deleted records
 
-The useful output here is the viewer state and your documented record comparison. A filename can appear in more than one record; deleted entries and reused references require context. A displayed timestamp is filesystem metadata, not a complete account of user activity. The viewer alone cannot establish execution, a login identity, or malicious intent.
+The viewer state and record comparison provide the basis for the notes. A filename can appear in several records, including deleted entries and reused references. Filesystem timestamps do not by themselves establish execution, a login identity, malicious intent, or a complete history of user activity.
 
-If opening is slow or fails, check artifact size and confirm it is a raw `$MFT`, not the enclosing image. Move larger work to MFTECmd rather than repeatedly forcing the GUI to load it. If a search hides surrounding records, clear the search before concluding that related entries are absent. Do not publish screenshots that expose private paths or account names.
+If loading is slow or fails, check the artifact size and confirm it is a raw `$MFT`, not the enclosing image. Move large inputs to MFTECmd. Clear the search before concluding that surrounding records are absent. Any shared screenshot needs private paths and account names removed.
 
-## Sources and validation
+## References
 
 - [Author catalog](https://ericzimmerman.github.io/)
 - [Official MFT Explorer manual](https://github.com/EZToolsManuals/EZToolsManuals/blob/main/manuscript/mftexplorer.txt)
 
-Sources checked October 7, 2026. The documented workflow was reviewed; the GUI was not executed for this repository. The example paths describe a proposed lab, not observed evidence.
+Sources checked October 7, 2026. Documentation reviewed; GUI not run. Paths describe a proposed lab, not observed evidence.

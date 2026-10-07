@@ -1,10 +1,12 @@
 # Zimmerman tool walkthroughs
 
-Practical walkthroughs for all **31 programs** listed in [Eric Zimmerman's official catalog](https://ericzimmerman.github.io/) when checked on October 7, 2026. This scope covers the download catalog, including collection and supporting programs; it does not claim to cover every library or repository under the author's account.
+[Repository home](../../README.md) · [Lab setup](setup.md) · [Parse record](../../templates/dfir-parse-record.md)
 
-Start with [lab setup and evidence handling](setup.md), then choose a tool for the artifact and question. Each guide includes copied-input paths, a documented command or GUI workflow, output review, limitations, and follow-up checks.
+Guides for the 31 programs in [Eric Zimmerman's download catalog](https://ericzimmerman.github.io/), grouped by the artifact they examine. Each guide covers inputs, commands or GUI steps, output fields, common misreadings, and related evidence.
 
-**Validation:** the official catalog, manuals, and relevant source help were reviewed. Zimmerman parser and GUI runs were not performed in this session. Example paths and commands are lab templates; no example result is presented as an observed case finding. Capture the installed tool's help and version before using a template.
+Start with [lab setup](setup.md), then choose an artifact below.
+
+[Caches](#execution-and-compatibility-caches) · [Files](#file-inspection) · [Logs](#event-and-web-logs) · [Viewers](#graphical-viewers) · [User activity](#user-activity) · [NTFS](#ntfs-metadata) · [Registry](#registry-processing) · [Databases](#databases-and-resource-usage) · [Collection](#collection-and-supporting-tools)
 
 ## Execution and compatibility caches
 
@@ -82,15 +84,17 @@ Start with [lab setup and evidence handling](setup.md), then choose a tool for t
 | [TimeApp](walkthroughs/timeapp.md) | GUI | Workstation local/UTC clock; stopwatch/countdown; optional public IP |
 | [XWFIM](walkthroughs/xwfim.md) | GUI | Authorized X-Ways installation |
 
-## Original companion tools
+## Companion utilities
 
-- [EZ CSV Summary](../tools/ez-csv-summary.md): summarize one chosen timestamp column with explicit timezone rules, input hashes, counts, and observed time bounds.
-- [Static file triage](../../malware-analysis/README.md): inspect a local file's bytes and hashes without running it.
+- [EZ CSV Summary](../tools/ez-csv-summary.md): input SHA-256, timestamp counts, and UTC bounds for one selected CSV column.
+- [Static file triage](../../malware-analysis/README.md): byte observations and hashes for a local file.
 
-These tools do not replace artifact acquisition or a parser. They do not establish user attribution, malware behavior, or complete event coverage.
+Both utilities inspect supplied data. Acquisition, artifact parsing, and attribution require separate evidence and tools.
 
-## Source record
+## References and review
 
-[catalog.json](catalog.json) records the checked catalog rows, official manual links, observed source commits, runtime discrepancies, and validation status. Program versions and terms can change. The [official manual repository](https://github.com/EZToolsManuals/EZToolsManuals) and [KAPE documentation](https://github.com/EricZimmerman/KapeDocs) remain the upstream references.
+Catalog, manual, and source-help review: October 7, 2026. Parser and GUI runs have not been performed for these guides. Commands use illustrative lab paths; test the installed version against a known benign artifact.
 
-The tutorials and Python utilities are maintained by Blue Team Security. They are independent of Eric Zimmerman and the upstream publishers. No third-party tool binaries or real incident datasets are distributed here.
+[catalog.json](catalog.json) records tool versions, manual links, source commits, runtime discrepancies, and review status. Check current packages and terms in the [official manuals](https://github.com/EZToolsManuals/EZToolsManuals) and [KAPE documentation](https://github.com/EricZimmerman/KapeDocs).
+
+These are independent Blue Team Security tutorials. Upstream publishers supply and license their binaries.

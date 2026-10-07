@@ -1,36 +1,36 @@
-# Get-ZimmermanTools: prepare a recorded tool set
+# Get-ZimmermanTools: prepare a reproducible tool set
 
-**Question:** Which downloaded tools and supporting definitions will this lab use?
+Which tool builds and supporting definitions will be used for the analysis?
 
-Get-ZimmermanTools is the author's PowerShell downloader and updater. It contacts external download services, extracts tool archives, and records download details. Run it during tool preparation, then freeze the selected build and definitions for a repeatable analysis run.
+Get-ZimmermanTools downloads and extracts archives from external services and records download details. Prepare the tools before examining evidence, then retain the selected builds and definitions for comparison between runs.
 
-## Prepare the destination
+## Choose the destination and runtime
 
-Follow the [shared setup](../setup.md). Obtain `Get-ZimmermanTools.ps1` through the author catalog, retain a copy of the reviewed script, and choose a tool directory such as `C:\Tools\Zimmerman`. Keep that directory separate from `C:\Cases\LAB-001\evidence`; downloading tools is not evidence collection.
+Follow the [shared setup](../setup.md). Obtain and retain the reviewed `Get-ZimmermanTools.ps1` from the author catalog. Use `C:\Tools\Zimmerman`, separate from `C:\Cases\LAB-001\evidence`.
 
-The current script accepts `-NetVersion 4`, `9`, or `0`, with `9` as its default. Some catalog entries are offered only in one column. Review the catalog for the specific tool instead of assuming that one downloader setting supplies every application.
+`-NetVersion` accepts `4`, `9`, or `0`; the current default is `9`. Some tools appear in only one catalog column, so one setting does not necessarily download every application.
 
-## Download and record
+## Download and record the selected builds
 
-After reviewing the script and choosing the appropriate analysis environment:
+Run the reviewed script in the prepared analysis environment:
 
 ```powershell
 .\Get-ZimmermanTools.ps1 -Dest 'C:\Tools\Zimmerman' -NetVersion 9
 ```
 
-Review the run's network and extraction messages. The current script records downloaded details in `!!!RemoteFileDetails.csv` under the destination and uses that information when checking for changes on later runs. Preserve it with the selected script and record the versions of tools actually used. Verify the downloaded executables as described in the shared setup.
+Review network and extraction messages. Preserve `!!!RemoteFileDetails.csv`, which records downloads and supports later change checks, with the script. Record the versions actually used and verify executables through the shared setup.
 
-Inspect the resulting folders before pointing any parser at evidence. Where ancillary maps or batch definitions are required, prepare and record them separately. The optional `-Sync` switch invokes synchronization for EvtxECmd, SQLECmd, and RECmd; it changes supporting definitions and adds network activity. Do not add it to a running case merely to obtain different results.
+Inspect downloaded folders before processing evidence. Prepare required maps or batch definitions separately. Optional `-Sync` invokes synchronization for EvtxECmd, SQLECmd, and RECmd: it changes supporting definitions and adds network activity. Record that update before a case run rather than changing definitions midway to alter results.
 
-## Troubleshoot and preserve repeatability
+## Handle partial downloads without changing case tools
 
-If a download fails, save the error and review the script's completed-file record; a partial tool directory is not a complete installation. Use approved proxy configuration where required, without publishing proxy credentials. Do not globally weaken PowerShell policy or endpoint protections to make the script run.
+Retain failed-download messages and compare the completed-file record with required tools. A partial directory is not a complete installation. Use approved proxy configuration where needed and keep credentials out of published records. Resolve policy or endpoint-protection blocks through the approved setup instead of globally weakening controls.
 
-The script downloads and updates; it does not test parser behavior against your artifacts. Do not replace a recorded case tool set in place when comparing runs. KAPE has separate acquisition and licensing requirements and is excluded by the current downloader script; follow the [KAPE guide](kape.md) for its scope.
+Downloading does not test parser behavior. Keep a recorded case tool set unchanged when comparing runs. The script excludes KAPE, which has separate acquisition and licensing requirements; see the [KAPE guide](kape.md).
 
-## Sources and validation
+## References
 
 - [Author catalog and downloader link](https://ericzimmerman.github.io/)
 - [Author's Get-ZimmermanTools script](https://github.com/EricZimmerman/Get-ZimmermanTools/blob/master/Get-ZimmermanTools.ps1)
 
-Sources checked October 7, 2026. The script's documented parameters and current source were reviewed; no download, update, or synchronization was run for this repository.
+Sources checked October 7, 2026. Script parameters and source reviewed; no download, update, or synchronization run.

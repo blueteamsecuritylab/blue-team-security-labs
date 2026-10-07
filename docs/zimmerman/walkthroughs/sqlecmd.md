@@ -1,42 +1,40 @@
-# SQLECmd: parse a mapped SQLite database reproducibly
+# SQLECmd: extract SQLite records with a preserved map set
 
-**Question:** Which application records are present in a copied lab database, and which map explains the output?
+SQLECmd extracts application records from SQLite databases that match its maps. Follow the [lab setup](../setup.md) and retain the acquired History database with collected WAL/SHM or journal files under `C:\Cases\LAB-001\evidence\sqlite\browser-lab`. Preserve acquisition context, browser/profile identity, hashes, filenames, and relative paths. A main database without relevant journal or WAL data may be incomplete.
 
-Follow the [shared setup](../setup.md). Keep the acquired lab browser History database and its collected WAL/SHM or journal files under `C:\Cases\LAB-001\evidence\sqlite\browser-lab`, unchanged. Preserve acquisition context, browser/profile identity, hashes, filenames, and relative paths. A main database without its relevant journal or WAL context may not represent the complete acquired state.
+Copy the acquired set to `C:\Cases\LAB-001\working\sqlite`, preserving companion-file relationships and recording source-to-working hashes. Both commands use this disposable copy. SQLite opens can create or update companion files; a read-only open by this parser has not been established.
 
-Before parsing, duplicate the acquired SQLite set into `C:\Cases\LAB-001\working\sqlite`, preserving companion-file relationships and recording the source-to-working hash mapping. Both commands below use that disposable working copy. Opening a SQLite database can create or update companion files; do not assume this parser opens it read-only.
+## Preserve the matching maps
 
-## Fix the map set for the run
-
-SQLECmd does not decode every SQLite database automatically. A matching map must exist. Review the author map definitions for the application's schema and preserve the exact map set and hashes used. Updating maps between runs can change output; record that as a separate run.
+A SQLite header alone is insufficient: SQLECmd needs a map matching the application's database schema. Retain the exact map set and hashes. Updating maps between runs can change output and should be recorded as a separate run.
 
 ```powershell
 & "C:\Tools\EZTools\SQLECmd\SQLECmd.exe" -f "C:\Cases\LAB-001\working\sqlite\browser-lab\History" --maps "C:\Tools\EZTools\SQLECmd\Maps" --csv "C:\Cases\LAB-001\outputs\sqlecmd"
 ```
 
-Save the tool version, command, transcript, and generated file list. Check which map matched and whether each extraction query completed. The example deliberately uses a preserved local map set rather than refreshing it during analysis.
+Save the version, command, transcript, and generated file list. Confirm the matched map and whether each extraction query completed. This command uses local maps without refreshing them during analysis.
 
-For a directory of unknown lab databases, the documented `--hunt` option identifies SQLite headers regardless of filenames:
+For unknown lab databases, `--hunt` identifies SQLite headers regardless of filenames:
 
 ```powershell
 & "C:\Tools\EZTools\SQLECmd\SQLECmd.exe" -d "C:\Cases\LAB-001\working\sqlite" --hunt --maps "C:\Tools\EZTools\SQLECmd\Maps" --csv "C:\Cases\LAB-001\outputs\sqlecmd-hunt"
 ```
 
-Identifying a SQLite file still does not guarantee a map can parse it.
+Header detection does not establish that a matching map exists.
 
-## Interpret the query, not just the column name
+## Read the map's SQL
 
-Read the matched map's SQL and descriptions before interpreting timestamps, joined fields, or row counts. A browser URL record is evidence in that database and profile; it does not necessarily establish a deliberate visit by a particular human. Background activity, synchronization, redirects, and retained history can affect interpretation.
+Review SQL and descriptions before interpreting timestamps, joins, or row counts. A browser URL record belongs to the acquired database and profile; background activity, synchronization, redirects, and retained history prevent automatic attribution to a deliberate human visit.
 
-Retain source paths even where inputs have identical bytes. The documented deduplication default can reduce duplicate processing, but separate acquisitions may still have distinct evidential context.
+Keep source paths for byte-identical inputs. The documented deduplication default can reduce repeated parsing, but separate acquisitions retain distinct evidential context.
 
-## Troubleshooting and next pivots
+## Resolve unmapped or empty results
 
-No CSV can mean no matching map, a changed schema, a non-SQLite input, a damaged copy, or no rows returned by the map's query. Inspect the transcript and schema before describing absence of activity. Do not modify the original database to make a query work.
+No CSV may mean a missing map, changed schema, non-SQLite input, damaged copy, or a query returning no rows. Check the transcript and schema before concluding that activity was absent. Do not modify acquired originals to make a query work.
 
-Follow a download or URL lead into its file-system path, endpoint telemetry, and adjacent browser artifacts. Record which rows and map queries support the claim and which data remained unparsed.
+Correlate download and URL records with file-system paths, endpoint telemetry, and adjacent browser artifacts. Record the rows and map queries supporting a finding, and identify unparsed data.
 
-**Validation status:** Author CLI and official manual checked on 2026-10-07. SQLECmd was **not run**; no parsed database or findings are supplied.
+Author CLI and official manual checked 2026-10-07. SQLECmd not run; no parsed database or findings supplied.
 
 ## Sources
 

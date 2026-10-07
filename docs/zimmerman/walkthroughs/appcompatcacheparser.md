@@ -1,16 +1,14 @@
-# AppCompatCacheParser: investigate file knowledge without inventing a launch time
+# AppCompatCacheParser: paths and control sets in ShimCache
 
-**Question:** Does the fictional lab host's compatibility cache reference an executable of interest, and which control set contains that reference?
+Locate an executable's compatibility-cache reference and identify the control set containing it. ShimCache records file knowledge; execution requires separate evidence.
 
-## Prepare the input
+## Acquire SYSTEM and its transaction logs
 
-Complete [setup and evidence handling](../setup.md). Acquire an authorized copy of the SYSTEM Registry hive from the source host, usually `C:\Windows\System32\config\SYSTEM`, with its matching transaction logs. Preserve original paths, hashes, collection time, and Windows build. Store working copies together in `C:\Cases\LAB-001\evidence\registry`.
+Follow [setup and evidence handling](../setup.md). Preserve an authorized copy of the source host's SYSTEM hive, usually `C:\Windows\System32\config\SYSTEM`, with matching transaction logs. Record original paths, hashes, collection time, and Windows build. Keep the copies together in `C:\Cases\LAB-001\evidence\registry`.
 
-AppCompatCacheParser reads a live Registry if `-f` is omitted. For this offline workflow, always supply the acquired SYSTEM hive so the analyst workstation cannot accidentally become the subject of the report.
+Always supply `-f` for offline analysis. Without it, AppCompatCacheParser reads the analysis workstation's live Registry.
 
-## Parse the working copy
-
-Use PowerShell with an approved installation:
+## Export all control sets
 
 ```powershell
 & 'C:\Tools\EZTools\AppCompatCacheParser.exe' --version
@@ -18,26 +16,26 @@ Use PowerShell with an approved installation:
 & 'C:\Tools\EZTools\AppCompatCacheParser.exe' -f 'C:\Cases\LAB-001\evidence\registry\SYSTEM' --csv 'C:\Cases\LAB-001\output\shimcache'
 ```
 
-The first pass leaves control-set selection at its documented default of all control sets. Save the actual version, command, output inventory, and parser warnings. The README includes older syntax/version examples; consult the installed help before adding control-set or other optional switches.
+The default includes all control sets. Save the installed version, command, output inventory, and warnings. The README contains older syntax and version examples; check installed help before adding a control-set selector or other optional switches.
 
-## Inspect the output
+## Interpret the path and timestamp fields
 
-Open the generated CSV files and identify the source hive, control set, path, ordering information, and timestamp fields available for that source format. Keep each control set distinguishable rather than combining similar-looking rows into independent executions. Search for the complete path of fictional `CanvasDemo.exe`, then review surrounding entries to understand the collection's context.
+Identify the source hive, control set, path, ordering information, and available timestamp fields in each generated CSV. Keep control sets distinguishable: similar rows from different sets are not separate executions.
 
-A compatibility-cache entry supports file knowledge under the source Windows format. It does not automatically prove that a process launched. In particular, a file's last-modified timestamp is not a last-execution timestamp. An application installation or ordinary file browsing can leave a benign explanation for a path that initially looks unfamiliar.
+Search for the complete path of fictional `CanvasDemo.exe` and inspect surrounding entries. Installation or ordinary file browsing can explain an unfamiliar path. A cache entry does not, by itself, establish a process launch. The file's last-modified timestamp is not its last-execution time; interpret the fields according to the source Windows format.
 
-## Bound the conclusion and pivot
+## Find execution evidence
 
-Record the artifact-level finding and the unanswered question separately: a path was recorded, but execution still needs corroboration. Compare with [Prefetch](pecmd.md), [Amcache](amcacheparser.md), UserAssist where available, and process creation telemetry. Identify precisely which record supports any claimed launch time or account attribution.
+Record the referenced path and its source row, then compare [Prefetch](pecmd.md), [Amcache](amcacheparser.md), UserAssist where available, and process creation telemetry. Identify the record supporting each launch-time or account-attribution claim.
 
-For empty output, confirm that the acquisition is the intended SYSTEM hive and that the Windows format is supported. Read dirty-hive and transaction-log messages; missing logs can limit recovered data. Do not use a “no-log” option merely to suppress that limitation. Address startup/runtime errors through the shared setup and retain the failed command in the notes.
+For empty output, verify that the input is the intended SYSTEM hive and that its format is supported. Read dirty-hive and transaction-log messages; missing logs limit recovery. A no-log option skips log replay without resolving that limitation. Retain unsuccessful commands and use shared setup guidance for startup or runtime errors.
 
-## Sources and validation
+## Sources
 
-Checked **2026-10-07**:
+Checked 2026-10-07:
 
 - [Author's AppCompatCacheParser README](https://github.com/EricZimmerman/AppCompatCacheParser)
 - [Official manual chapter](https://github.com/EZToolsManuals/EZToolsManuals/blob/main/manuscript/appcompatcacheparser.txt)
 - [Author's current catalog](https://ericzimmerman.github.io/)
 
-**Validation status:** Documentation checked; parser/GUI run not performed in this session.
+Validation: Documentation review only; parser and GUI examples have not been run.

@@ -1,33 +1,33 @@
-# EvtxECmd: start an event-log investigation
+# EvtxECmd: export and inspect Windows event logs
 
-**Question:** What did the acquired Windows logs record around a lab event, and which records need a closer look?
+EvtxECmd exports acquired Windows event logs to tables and structured records. This example examines a copied Security log; it performs no live collection.
 
-Follow the [shared setup](../setup.md) first. Use copied or acquired lab EVTX files under `C:\Cases\LAB-001\evidence\event-logs`. Keep the original collection intact and retain filenames, hashes, acquisition time, host identity, and log-channel coverage. This walkthrough processes a copied Security log; it does not collect a live host.
+Use the [lab setup](../setup.md) and place copied EVTX files under `C:\Cases\LAB-001\evidence\event-logs`. Retain the original files, hashes, acquisition time, host identity, and collected channels.
 
-## Parse one log before expanding scope
+## Export CSV and XML
 
-Run these commands in PowerShell after adjusting the installed tool path:
+Adjust the installed tool path, then run in PowerShell:
 
 ```powershell
 & "C:\Tools\EZTools\EvtxECmd\EvtxECmd.exe" -f "C:\Cases\LAB-001\evidence\event-logs\Security.evtx" --csv "C:\Cases\LAB-001\outputs\evtxecmd" --csvf "security.csv"
 & "C:\Tools\EZTools\EvtxECmd\EvtxECmd.exe" -f "C:\Cases\LAB-001\evidence\event-logs\Security.evtx" --xml "C:\Cases\LAB-001\outputs\evtxecmd\xml"
 ```
 
-Save the console transcript with the command, tool version, warnings, and hashes of the maps used. The first command gives a sortable table. The second preserves an XML representation for examining the original event fields behind a mapped column. A directory run uses `-d` instead of `-f`; expand only after checking the first file.
+The CSV provides a sortable table; the XML exposes event fields behind mapped columns. Save the command, tool version, map hashes, and console warnings. A directory run uses `-d` instead of `-f`; check one file's output before expanding.
 
-## Read a record in its channel
+## Match each row to its event
 
-Start with source file, computer, channel, provider, event ID, record ID, and creation time. Then inspect the payload. Event IDs need provider and channel context: a number alone does not describe an action. Mapped payload columns are selected fields, not the entire event.
+Read the source file, computer, channel, provider, event ID, record ID, and creation time before interpreting the payload. An event ID needs its provider and channel. Mapped payload columns select fields from the event; they do not replace the full payload.
 
-Filter the exported table to your lab time window and return to the corresponding XML for each lead. Record the timezone used for display. If you later use `--sd` or `--ed`, the documented bounds are UTC; keep an unfiltered baseline.
+Filter the table to the lab time window and inspect the corresponding XML for each lead. Record the display timezone. The documented `--sd` and `--ed` filters use UTC bounds; retain an unfiltered export.
 
-## Limits, troubleshooting, and next pivots
+## Check missing records and clock warnings
 
-No rows can mean absent auditing, retention loss, incomplete collection, a filter mistake, or a parser problem. It does not establish that the activity never happened. EvtxECmd processes EVTX, not legacy EVT files. Review parse errors and map availability before treating blank mapped fields as missing raw data.
+An empty result can reflect absent auditing, retention loss, incomplete collection, filtering, or a parser error. It does not establish that the activity never occurred. EvtxECmd handles EVTX, not legacy EVT. Check parse errors and maps before treating a blank mapped field as absent raw data.
 
-A time-discrepancy warning is a lead to investigate, not proof of tampering. Check raw timestamps and host-clock evidence. Follow an account or process lead into adjacent event channels, endpoint telemetry, and the [RECmd walkthrough](recmd.md), keeping identifiers and time windows explicit.
+A time-discrepancy warning alone does not establish tampering. Compare raw timestamps with host-clock evidence. Correlate an account or process with adjacent event channels, endpoint telemetry, and [Registry artifacts](recmd.md), retaining the identifiers and time range used.
 
-**Validation status:** Documentation and command syntax checked on 2026-10-07. The parser was **not run** for this walkthrough; no observed output or detection result is claimed.
+Documentation and command syntax checked 2026-10-07. Parser not run; no observed output or detection results supplied.
 
 ## Sources
 
