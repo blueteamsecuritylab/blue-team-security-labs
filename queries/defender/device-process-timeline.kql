@@ -1,0 +1,10 @@
+let device = "HOST-042";
+let startTime = datetime(2026-05-24T14:00:00Z);
+let endTime = datetime(2026-05-24T16:00:00Z);
+DeviceProcessEvents
+| where Timestamp between (startTime .. endTime)
+| where DeviceName =~ device
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, FileName, ProcessCommandLine,
+          FolderPath, SHA256, ReportId
+| order by Timestamp asc

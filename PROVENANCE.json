@@ -1,0 +1,34 @@
+[
+  {
+    "query": "queries/sentinelone/browser-to-script.s1ql",
+    "source": "https://blueteamsecurity.org/blog/query-forge-sentinelone-browser-to-script-execution/",
+    "source_section": "Basic Hunt",
+    "review_date": "2026-10-07",
+    "sha256": "c4b61a0880b67609d7e91b49028c9ce36c11c2835dfb0a3f17130b5c5cfe9b54",
+    "status": "Published excerpt; text and reference review only. No platform execution or result evidence supplied."
+  },
+  {
+    "query": "queries/sentinelone/encoded-powershell.s1ql",
+    "source": "https://blueteamsecurity.org/blog/sentinelone-threat-hunting-with-deep-visibility/",
+    "source_section": "Encoded PowerShell behavior",
+    "review_date": "2026-10-07",
+    "sha256": "1121d8c8f587eacdeb5d3b6fdb6065a5500aa1732b821c4db642a03399cb8006",
+    "status": "Published excerpt; text and reference review only. No platform execution or result evidence supplied."
+  },
+  {
+    "query": "queries/defender/device-process-timeline.kql",
+    "source": "https://blueteamsecurity.org/blog/advanced-hunting-queries-for-incident-response/",
+    "source_section": "Process Execution Query",
+    "review_date": "2026-10-07",
+    "sha256": "5f95d4f5f8f6eec8d98a6ca7afea2c3db59bcf33ebc286369d3943f772458d77",
+    "status": "Published excerpt; text and reference review only. No platform execution or result evidence supplied."
+  },
+  {
+    "query": "queries/defender/file-hash-scope.kql",
+    "source": "https://blueteamsecurity.org/blog/advanced-hunting-queries-for-incident-response/",
+    "source_section": "Hash Scope Query",
+    "review_date": "2026-10-07",
+    "sha256": "8e327a70f78b3175fd1b7d2bc4739625452443340af86a8915e11a645614d37e",
+    "status": "Published excerpt; text and reference review only. No platform execution or result evidence supplied."
+  }
+]

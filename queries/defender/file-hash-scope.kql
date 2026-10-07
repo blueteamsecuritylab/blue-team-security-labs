@@ -1,0 +1,8 @@
+let fileHash = "<sha256_value>";
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 == fileHash
+| summarize firstSeen=min(Timestamp), lastSeen=max(Timestamp),
+            devices=dcount(DeviceName), paths=make_set(FolderPath, 20)
+          by SHA256, FileName, ActionType
+| order by devices desc

@@ -1,0 +1,2 @@
+src.process.parent.name in ("chrome.exe", "msedge.exe", "firefox.exe")
+AND src.process.name in ("powershell.exe", "cmd.exe", "wscript.exe", "cscript.exe", "mshta.exe")

@@ -1,0 +1,5 @@
+src.process.name = "powershell.exe"
+AND (
+  src.process.cmdline contains "-enc"
+  OR src.process.cmdline contains "-encodedcommand"
+)
