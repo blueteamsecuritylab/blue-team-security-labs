@@ -559,7 +559,7 @@
       "source_repository_url": "https://github.com/EricZimmerman/Get-ZimmermanTools",
       "repository_archived": false,
       "status": "listed on official catalog; no deprecation claimed",
-      "critical_limitations": "Network/download operation; records historical download state in CSV, not a comprehensive on-disk integrity audit. NetVersion default 9.",
+      "critical_limitations": "Network/download operation; records historical download state in CSV, not a comprehensive on-disk integrity audit. The default was 9 in this October 7, 2026 snapshot. For current options, see the downloader walkthrough.",
       "validation_status": "documentation reviewed; binaries not downloaded or executed",
       "limitations_basis": "official script/docs plus conservative analysis guidance",
       "walkthrough": "walkthroughs/get-zimmerman-tools.md"

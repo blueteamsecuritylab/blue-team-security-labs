@@ -6,7 +6,7 @@
 
 Download from the [author's catalog](https://ericzimmerman.github.io/) and read the [tool documentation](https://ericzimmerman.github.io/documentation/). Check the package's hash and any publisher signature, then record the executable version, hash, runtime, and help output.
 
-The catalog's downloader defaults to .NET 9. Its general runtime note conflicts with some individual rows; use the selected package's requirements. GUI tools may need the Windows Desktop Runtime. Microsoft's [support policy](https://dotnet.microsoft.com/en-us/platform/support/policy) ends .NET 9 support on November 10, 2026. Check the current package and policy after that date: a newer major runtime alone does not establish compatibility.
+The downloader defaults to .NET 10. Check the publisher's catalog for the builds available for each tool. GUI builds may need the Windows Desktop Runtime. Microsoft ended support for .NET 9 on November 10, 2026. If you are reproducing an older run, record the exact executable and runtime used. [Microsoft runtime support dates](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 
 Guide commands use example directories such as `C:\Tools\EZTools\PECmd`. Substitute your extracted package path; the downloader may arrange directories differently. If Windows blocks a tool, inspect the cause and follow the workstation's approved software process.
 
@@ -37,4 +37,4 @@ These guides distribute instructions and original utilities, not third-party bin
 
 KAPE's [official FAQ](https://github.com/EricZimmerman/KapeDocs/blob/master/Pages/50-Frequently-asked-questions.md) states that commercial use on third-party networks or paid engagements is no longer available from January 1, 2026. Listed free uses include government, education, research, and internal company work. Read the current terms before use.
 
-Documentation checked October 7, 2026. No Zimmerman binary was downloaded or run for these guides.
+Documentation checked October 7, 2026. The downloader default and runtime support dates were rechecked on November 24, 2026. No Zimmerman binary was downloaded or run for these guides.

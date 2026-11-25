@@ -8,14 +8,14 @@ Get-ZimmermanTools downloads and extracts archives from external services and re
 
 Follow the [shared setup](../setup.md). Obtain and retain the reviewed `Get-ZimmermanTools.ps1` from the author catalog. Use `C:\Tools\Zimmerman`, separate from `C:\Cases\LAB-001\evidence`.
 
-`-NetVersion` accepts `4`, `9`, or `0`; the current default is `9`. Some tools appear in only one catalog column, so one setting does not necessarily download every application.
+Use `-NetVersion 10` for .NET 10 (the default), `4` for the available .NET Framework builds, or `0` for both families. Check the catalog for each tool’s available builds. The current script accepts the older value `9`, prints a warning, and downloads the .NET 10 builds. Record the versions from the installed tools.
 
 ## Download and record the selected builds
 
 Run the reviewed script in the prepared analysis environment:
 
 ```powershell
-.\Get-ZimmermanTools.ps1 -Dest 'C:\Tools\Zimmerman' -NetVersion 9
+.\Get-ZimmermanTools.ps1 -Dest 'C:\Tools\Zimmerman' -NetVersion 10
 ```
 
 Review network and extraction messages. Preserve `!!!RemoteFileDetails.csv`, which records downloads and supports later change checks, with the script. Record the versions actually used and verify executables through the shared setup.
@@ -31,6 +31,6 @@ Downloading does not test parser behavior. Keep a recorded case tool set unchang
 ## References
 
 - [Author catalog and downloader link](https://ericzimmerman.github.io/)
-- [Author's Get-ZimmermanTools script](https://github.com/EricZimmerman/Get-ZimmermanTools/blob/master/Get-ZimmermanTools.ps1)
+- [Downloader source used to verify the runtime options](https://github.com/EricZimmerman/Get-ZimmermanTools/blob/c8178ec1a9bc6e59a3e3ff6ba5d24f3c3a3d13c4/Get-ZimmermanTools.ps1)
 
-Sources checked October 7, 2026. Script parameters and source reviewed; no download, update, or synchronization run.
+Sources checked October 7, 2026. Runtime options were rechecked against the script on November 24, 2026. This review examined the source without running the downloader or synchronizing definitions.
